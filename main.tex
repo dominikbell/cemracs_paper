@@ -1,0 +1,158 @@
+% !TeX spellcheck = en_GB
+
+\documentclass{article}
+
+%\usepackage[sc]{mathpazo}
+\usepackage[T1]{fontenc}
+\linespread{1.05}
+\usepackage{microtype}
+\usepackage{titlesec}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[left=2.5cm,top=2.3cm,right=2.5cm]{geometry}
+\usepackage[UKenglish]{babel}
+\usepackage{graphicx}
+\usepackage{bbold}
+\usepackage{enumerate}
+\usepackage{hyperref}
+\usepackage{physics}
+
+\theoremstyle{definition}
+\newtheorem{prop}{Proposition}
+\newtheorem{thm}{Theorem}
+
+\usepackage{tikz}
+\usetikzlibrary{cd}
+\tikzcdset{arrow style=tikz
+	, diagrams={>={Stealth[length=1.2mm, width=1mm]}}
+}
+
+\renewcommand{\real}{{\mathbb R}} %% real numbers
+\newcommand{\cO}{\mathcal{O}}
+\newcommand{\del}{\partial}
+\newcommand{\p}{\varphi}
+\newcommand{\pa}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\diff}[2]{\frac{\text{d} #1}{\text{d} #2}}
+\renewcommand{\var}[2]{\frac{\delta #1}{\delta #2}}
+\newcommand{\dt}{\frac{\text{d}}{\text{d} t}}
+\newcommand{\ds}{\displaystyle}
+\newcommand{\follows}{\hspace{5mm}\Rightarrow\hspace{5mm}}
+\newcommand{\hodge}{\star\hspace{-0.2mm}}
+\newcommand{\one}{\mathbb{1}}
+\newcommand{\bracket}[2]{\left\{ #1, #2 \right\}}
+\newcommand{\inner}[2]{\left\langle #1, #2 \right\rangle}
+\newcommand{\Alt}{\text{Alt}}
+\newcommand{\vol}{\text{vol}}
+\newcommand{\id}{\text{id}}
+\newcommand{\td}{\;\tilde{\text{d}}}
+\newcommand{\tw}{\tilde{w}}
+
+\newcommand{\bx}{\mathbf{x}}
+\newcommand{\bv}{\mathbf{v}}
+\newcommand{\bX}{\mathbf{X}}
+\newcommand{\bV}{\mathbf{V}}
+\newcommand{\bE}{\mathbf{E}}
+\newcommand{\bB}{\mathbf{B}}
+\newcommand{\bA}{\mathbf{A}}
+\newcommand{\be}{\mathbf{e}}
+\newcommand{\bb}{\mathbf{b}}
+\newcommand{\bJ}{\mathbf{J}}
+\newcommand{\bF}{\mathbf{F}}
+\renewcommand{\bf}{\mathbf{f}}
+\newcommand{\bL}{\mathbf{\Lambda}}
+\newcommand{\bM}{\mathbf{M}}
+\newcommand{\bW}{\mathbf{W}}
+\newcommand{\bH}{\mathbf{H}}
+\newcommand{\bm}{\mathbf{m}}
+\newcommand{\bU}{\mathbf{U}}
+\newcommand{\bD}{\mathbf{D}}
+\newcommand{\bI}{\mathbf{I}}
+\newcommand{\bC}{\mathbf{C}}
+\newcommand{\bw}{\mathbf{w}}
+
+\newcommand{\cE}{\mathcal{E}}
+\newcommand{\cB}{\mathcal{B}}
+\newcommand{\cH}{\mathcal{H}}
+\newcommand{\cC}{\mathcal{C}}
+\newcommand{\cK}{\mathcal{K}}
+\newcommand{\cF}{\mathcal{F}}
+\newcommand{\cG}{\mathcal{G}}
+\newcommand{\cL}{\mathcal{L}}
+\newcommand{\cR}{\mathcal{R}}
+\newcommand{\cQ}{\mathcal{Q}}
+\newcommand{\cJ}{\mathcal{J}}
+
+\newcommand{\hcF}{\hat{\mathcal{F}}}
+\newcommand{\hcG}{\hat{\mathcal{G}}}
+
+\newcommand{\vcF}{\vec{\cF}}
+\newcommand{\vhcF}{\vec{\hat{\cF}}}
+
+\newcommand{\hbE}{\hat{\mathbf{E}}}
+\newcommand{\hbB}{\hat{\mathbf{B}}}
+\newcommand{\hbJ}{\hat{\mathbf{J}}}
+\newcommand{\hbF}{\hat{\mathbf{F}}}
+
+\newcommand{\bh}{{\boldsymbol{\eta}}}
+\newcommand{\br}{{\boldsymbol{\rho}}}
+
+\newcommand{\hnab}{\hat{\nabla}}
+\newcommand{\bnab}{\overline{\nabla}}
+\newcommand{\ba}{\mathbf{a}}
+\newcommand{\bDL}{\overline{DL}}
+\newcommand{\tDL}{\widetilde{DL}}
+\newcommand{\bG}{\overline{G}}
+\newcommand{\hfF}{\hat{\mathbb{F}}}
+\newcommand{\tPi}{\tilde{\Pi}}
+\newcommand{\tfB}{\widetilde{\fB_0}}
+
+\newcommand{\fM}{\mathbb{M}}
+\newcommand{\fN}{\mathbb{N}}
+\newcommand{\fC}{\mathbb{C}}
+\newcommand{\fG}{\mathbb{G}}
+\newcommand{\fD}{\mathbb{D}}
+\newcommand{\fE}{\mathbb{E}}
+\newcommand{\fB}{\mathbb{B}}
+\newcommand{\fL}{\mathbb{\Lambda}}
+\newcommand{\fF}{\mathbb{F}}
+\newcommand{\fV}{\mathbb{V}}
+\newcommand{\fP}{\mathbb{P}}
+\newcommand{\fJ}{\mathbb{J}}
+\newcommand{\fA}{\mathbb{A}}
+\newcommand{\fH}{\mathbb{H}}
+\newcommand{\fK}{\mathbb{K}}
+
+
+\newcommand{\tfG}{\widetilde{\mathbb{G}}}
+
+\renewcommand{\curl}{\text{curl}\;}
+\renewcommand{\grad}{\;\text{grad}\;}
+\renewcommand{\div}{\;\text{div}\;}
+\newcommand{\tcurl}{\text{curl}}
+\newcommand{\tgrad}{\text{grad}}
+\newcommand{\tdiv}{\text{div}}
+
+\renewcommand{\d}{\;\text{d}}
+\newcommand{\dx}{\;\text{d} \bx}
+\renewcommand{\dv}{\;\text{d} \bv}
+\newcommand{\vth}{v_\text{th}}
+\newcommand{\diag}{\text{diag}}
+\newcommand{\Dt}{\Delta t \;}
+
+
+
+
+
+\begin{document}
+
+
+\title{SILAS Cemracs project}
+\author{Dominik Bell, Martin Campos Pinto, Davor Kumozec, Frederik Schnack, Eric Sonnendrücker}
+
+\maketitle
+
+
+
+
+
+\end{document}
