@@ -1,164 +1,87 @@
-% !TeX spellcheck = en_GB
-
-\documentclass{article}
-
-%\usepackage[sc]{mathpazo}
+\documentclass[proc]{edpsmath}
+\usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\linespread{1.05}
-\usepackage{microtype}
-\usepackage{titlesec}
+%\usepackage{microtype}
 
-\usepackage{amsmath,amssymb,amsthm}
-\usepackage[left=2.5cm,top=2.3cm,right=2.5cm]{geometry}
-\usepackage[UKenglish]{babel}
-\usepackage{graphicx}
-\usepackage{bbold}
-\usepackage{enumerate}
-\usepackage{hyperref}
+%\usepackage{amsmath,amssymb,amsthm}
+%\usepackage{graphicx}
+%\usepackage{bbold}
+%\usepackage{enumerate}
+%\usepackage{hyperref}
 \usepackage{physics}
+%\usepackage{float} 
+%\usepackage{mathtools}
+%\mathtoolsset{showonlyrefs=true}
+%\usepackage{tikz}
 
-\theoremstyle{definition}
-\newtheorem{prop}{Proposition}
-\newtheorem{thm}{Theorem}
-
-\usepackage{tikz}
-\usetikzlibrary{cd}
-\tikzcdset{arrow style=tikz
-	, diagrams={>={Stealth[length=1.2mm, width=1mm]}}
-}
-
-\renewcommand{\real}{{\mathbb R}} %% real numbers
-\newcommand{\cO}{\mathcal{O}}
-\newcommand{\del}{\partial}
-\newcommand{\p}{\varphi}
-\newcommand{\pa}[2]{\frac{\partial #1}{\partial #2}}
-\newcommand{\diff}[2]{\frac{\text{d} #1}{\text{d} #2}}
-\renewcommand{\var}[2]{\frac{\delta #1}{\delta #2}}
-\newcommand{\dt}{\frac{\text{d}}{\text{d} t}}
-\newcommand{\ds}{\displaystyle}
-\newcommand{\follows}{\hspace{5mm}\Rightarrow\hspace{5mm}}
-\newcommand{\hodge}{\star\hspace{-0.2mm}}
-\newcommand{\one}{\mathbb{1}}
-\newcommand{\bracket}[2]{\left\{ #1, #2 \right\}}
-\newcommand{\inner}[2]{\left\langle #1, #2 \right\rangle}
-\newcommand{\Alt}{\text{Alt}}
-\newcommand{\vol}{\text{vol}}
-\newcommand{\id}{\text{id}}
-\newcommand{\td}{\;\tilde{\text{d}}}
-\newcommand{\tw}{\tilde{w}}
-
+\newcommand{\bb}{\mathbf{b}}
+\newcommand{\bA}{\mathbf{A}}
+\newcommand{\vp}{v_\parallel}
 \newcommand{\bx}{\mathbf{x}}
 \newcommand{\bv}{\mathbf{v}}
-\newcommand{\bX}{\mathbf{X}}
-\newcommand{\bV}{\mathbf{V}}
-\newcommand{\bE}{\mathbf{E}}
+\newcommand{\bu}{\mathbf{u}}
 \newcommand{\bB}{\mathbf{B}}
-\newcommand{\bA}{\mathbf{A}}
-\newcommand{\be}{\mathbf{e}}
-\newcommand{\bb}{\mathbf{b}}
-\newcommand{\bJ}{\mathbf{J}}
-\newcommand{\bF}{\mathbf{F}}
-\renewcommand{\bf}{\mathbf{f}}
-\newcommand{\bL}{\mathbf{\Lambda}}
-\newcommand{\bM}{\mathbf{M}}
-\newcommand{\bW}{\mathbf{W}}
-\newcommand{\bH}{\mathbf{H}}
-\newcommand{\bm}{\mathbf{m}}
-\newcommand{\bU}{\mathbf{U}}
-\newcommand{\bD}{\mathbf{D}}
-\newcommand{\bI}{\mathbf{I}}
-\newcommand{\bC}{\mathbf{C}}
-\newcommand{\bw}{\mathbf{w}}
-
-\newcommand{\cE}{\mathcal{E}}
-\newcommand{\cB}{\mathcal{B}}
-\newcommand{\cH}{\mathcal{H}}
-\newcommand{\cC}{\mathcal{C}}
-\newcommand{\cK}{\mathcal{K}}
-\newcommand{\cF}{\mathcal{F}}
-\newcommand{\cG}{\mathcal{G}}
-\newcommand{\cL}{\mathcal{L}}
-\newcommand{\cR}{\mathcal{R}}
-\newcommand{\cQ}{\mathcal{Q}}
-\newcommand{\cJ}{\mathcal{J}}
-
-\newcommand{\hcF}{\hat{\mathcal{F}}}
-\newcommand{\hcG}{\hat{\mathcal{G}}}
-
-\newcommand{\vcF}{\vec{\cF}}
-\newcommand{\vhcF}{\vec{\hat{\cF}}}
-
-\newcommand{\hbE}{\hat{\mathbf{E}}}
-\newcommand{\hbB}{\hat{\mathbf{B}}}
-\newcommand{\hbJ}{\hat{\mathbf{J}}}
-\newcommand{\hbF}{\hat{\mathbf{F}}}
-
-\newcommand{\bh}{{\boldsymbol{\eta}}}
-\newcommand{\br}{{\boldsymbol{\rho}}}
-
-\newcommand{\hnab}{\hat{\nabla}}
-\newcommand{\bnab}{\overline{\nabla}}
-\newcommand{\ba}{\mathbf{a}}
-\newcommand{\bDL}{\overline{DL}}
-\newcommand{\tDL}{\widetilde{DL}}
-\newcommand{\bG}{\overline{G}}
-\newcommand{\hfF}{\hat{\mathbb{F}}}
-\newcommand{\tPi}{\tilde{\Pi}}
-\newcommand{\tfB}{\widetilde{\fB_0}}
-
-\newcommand{\fM}{\mathbb{M}}
-\newcommand{\fN}{\mathbb{N}}
-\newcommand{\fC}{\mathbb{C}}
-\newcommand{\fG}{\mathbb{G}}
-\newcommand{\fD}{\mathbb{D}}
-\newcommand{\fE}{\mathbb{E}}
-\newcommand{\fB}{\mathbb{B}}
-\newcommand{\fL}{\mathbb{\Lambda}}
-\newcommand{\fF}{\mathbb{F}}
-\newcommand{\fV}{\mathbb{V}}
-\newcommand{\fP}{\mathbb{P}}
-\newcommand{\fJ}{\mathbb{J}}
-\newcommand{\fA}{\mathbb{A}}
-\newcommand{\fH}{\mathbb{H}}
-\newcommand{\fK}{\mathbb{K}}
-
-
-\newcommand{\tfG}{\widetilde{\mathbb{G}}}
-
-\renewcommand{\curl}{\text{curl}\;}
-\renewcommand{\grad}{\;\text{grad}\;}
-\renewcommand{\div}{\;\text{div}\;}
-\newcommand{\tcurl}{\text{curl}}
-\newcommand{\tgrad}{\text{grad}}
-\newcommand{\tdiv}{\text{div}}
-
-\renewcommand{\d}{\;\text{d}}
-\newcommand{\dx}{\;\text{d} \bx}
-\renewcommand{\dv}{\;\text{d} \bv}
-\newcommand{\vth}{v_\text{th}}
-\newcommand{\diag}{\text{diag}}
 \newcommand{\Dt}{\Delta t \;}
 
+\newcommand{\dbx}{\dot{\mathbf{x}}}
+\newcommand{\diff}[2]{\frac{\text{d} #1}{\text{d} #2}}
+\newcommand{\pa}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\ap}{a_\parallel}
+\newcommand{\mean}[1]{\langle #1 \rangle}
+\newcommand{\Bap}{B_\parallel^\ast}
+\newcommand{\bracket}[2]{\left\{ #1, #2 \right\}}
+\newcommand{\gcbracket}[2]{\left\{ #1, #2 \right\}_{\text{g.c.}}}
+\newcommand{\dt}{\frac{\text{d}}{\text{d} t}}
 
-
+\renewcommand{\d}{\;\text{d}}
 
 
 \begin{document}
 
+\title{SILAS - Semi-Lagrangian scheme with Arakawa splitting}
+\thanks{CEMRACS}\thanks{Max-Planck}% At most 5 thanks
+%
+\author{Dominik Bell}\address{Max-Planck-Institut für Plasmaphysik, Garching, Germany; \email{dominik@...\ \&\ frederik@...\ \&\ martin@...\ \&\ eric@...}}\secondaddress{Technische Universität München, Zentrum Mathematik, Garching, Germany}
+\author{Martin Campos Pinto}\sameaddress{1}
+\author{Davor Kumozec}\address{Faculty of Sciences, University of Novi Sad, Serbia; \email{davor.kumozec@dmi.uns.ac.rs}}
+\author{Frederik Schnack}\sameaddress{1}
+\author{Eric Sonnendrücker}\sameaddress{1,2}
 
-\title{SILAS Cemracs project}
-\author{Dominik Bell, Martin Campos Pinto, Davor Kumozec, Frederik Schnack, Eric Sonnendrücker}
+\begin{abstract}
+In practice, there are various ways to solve gyro-kinetic equations. Here we will combine the Semi-Lagrangian (SL) and Arakawa scheme. Both schemes are successfully implemented in practice when applied individually, but our goal is to decompose the problem into fast (parallel) dynamic and slow (perpendicular) dynamic and to combine these two schemes. SL scheme will be used to solve fast subsystem and Arakawa scheme for slow. In \cite{pygyro_code}, what is our reference code, the entire model is solved using SL, and we will replace the part related to the slow subsystem with an Arakawa scheme. The main reason for combining these two schemes is to get a solution that preserves some of the basic measures in the system we have. In Section II we will describe properties of both schemes and splitting between advection equations. In Part III numerical experiments will be presented, first for Arakawa scheme as verification of theoretical properties and after that for PyGyro model.
+\end{abstract}
+%
+\begin{resume}
+En pratique, il existe différentes manières de résoudre les équations gyro-cinétiques. Ici, nous allons combiner le schéma Semi-Lagrangien (SL) et Arakawa. Les deux schémas sont mis en œuvre avec succès dans la pratique lorsqu'ils sont appliqués individuellement, mais notre objectif est de décomposer le problème en dynamique rapide (parallèle) et dynamique lente (perpendiculaire) et de combiner ces deux schémas. Le schéma SL sera utilisé pour résoudre le sous-système rapide et le schéma Arakawa pour le lent. Dans \cite{pygyro_code}, quel est notre code de référence, tout le modèle est résolu à l'aide de SL, et nous remplacerons la partie liée au sous-système lent par un schéma d'Arakawa. La principale raison de combiner ces deux schémas est d'obtenir une solution qui préserve certaines des mesures de base du système que nous avons. Dans la section II, nous décrirons les propriétés des deux schémas et la séparation entre les équations d'advection. Dans la partie III, des expériences numériques seront présentées, d'abord pour le schéma d'Arakawa comme vérification des propriétés théoriques et ensuite pour le modèle PyGyro.
+\end{resume}
+
 
 \maketitle
 
-\tableofcontents
+\section*{Introduction}
+	\subsection*{Gyro-kinetic equations, different discretization and approach}
+	        \input{introduction.tex}
+	        \label{sec:introduction}
 
-\newpage
-\include{introduction}
+\section{Operator splitting and discretization}
+	\label{sec:splitting_discretization}
+	\input{operator_splitting_and_discretization}
+
+\section{Numerical Experiments}
+	\subsection{Pure advection}
+	\subsection{PyGyro}
+
+\appendix
+\section{Order for Arakawa scheme}
+\label{sec:ara_order}
+\input{proof_arakawa_order}
 
 
+\begin{acknowledgement}
+Acknowledgement for people, thanks for institutions(in the title)...
+\end{acknowledgement}
 
-
-
-
+\bibliographystyle{ieeetr}
+\bibliography{literature}
 \end{document}
+
