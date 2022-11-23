@@ -108,13 +108,15 @@ This is the Poisson equation and in the code it is solved using a finite element
 
 Boundary conditions on $f$ are
 \begin{itemize}
-    \item Periodicity along $\theta$, $z$ and $v_\parallel$.
+    \item Periodicity along $\theta$ and $z$.
+    \item Boundary conditions along $v_\parallel$ %TODO
     \item In $r$ direction, either Dirichlet boundary conditions (for the second-order scheme only) or extrapolation to an outside equilibrium function
 \end{itemize}
 
 For the boundary conditions on $\phi$ we take
 \begin{itemize}
-    \item Periodic along $\theta$ and $v_\parallel$.
+    \item Periodic along $\theta$.
+    \item Boundary Conditions along $z$ %TODO
     \item In $r$-direction, $\phi$ is decomposed into Fourier modes. At $r_\text{min}$, we take homogeneous Neumann boundary conditions for the zeroth mode and homogeneous boundary conditions for the others. At $r_\text{max}$, we just take homogeneous Dirichlet boundary conditions.
 \end{itemize}
 
