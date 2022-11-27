@@ -3,8 +3,7 @@
 \section{Operator Splitting and Discretization}
 \label{sec:splitting_discretization}
 
-It is a common tool to split a PDE in several sub-steps in order to do the numerical integration. This simplifies the equation tremendously at the cost of introducing some numerical error. Multiple sub-flows can be recombined to yield an approximation to a time-step of the full PDE; most commonly used methods for this are the \textbf{Strang splitting} which is of first order, and \textbf{Lie splitting} which is a second order method (for more details see [emily thesis] %TODO: Add citation
-). In the code \cite{pygyro_code} Lie splitting is used for a predictor step and then Strang splitting to compute the full time-step from the predicted distribution function.
+It is a common tool to split a PDE in several sub-steps in order to do the numerical integration. This simplifies the equation tremendously at the cost of introducing some numerical error. Multiple sub-flows can be recombined to yield an approximation to a time-step of the full PDE; most commonly used methods for this are the \textbf{Strang splitting} which is of first order, and \textbf{Lie splitting} which is a second order method (for more details see \cite{emily}). In the code \cite{pygyro_code} Lie splitting is used for a predictor step and then Strang splitting to compute the full time-step from the predicted distribution function.
 
 We can split our equation 
 \begin{equation}
@@ -31,7 +30,7 @@ In our work, we will use two different approaches to solving these equations. Fo
 
 \subsection{Semi-Lagrangian Scheme for the Fast Time Subsystem}
 
-The fast time subsystem will be solved using semi-Lagrangian scheme. As reference we will use \cite{campospinto} and [emily thesis]. %TODO: add citation
+The fast time subsystem will be solved using semi-Lagrangian scheme. As reference we will use \cite{campospinto} and \cite{emily}.
 The code for this part can be found at \cite{pygyro_code}. We will use general notations in the beginning and then move on to the specific problem we have in our model. This scheme is frequently used in solving advection problems of the form:
 \begin{equation}
     \partial_t f(t,\mathbf{x})+v(t,\mathbf{x})\cdot \nabla f(t,\mathbf{x})=0, \qquad t\in[0,T], \quad \mathbf{x}\in\mathbb{R}^d
