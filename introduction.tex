@@ -1,10 +1,16 @@
-In a Tokamak, particles have complicated dynamics in real space which consists of a slow motion along the magnetic field lines superimposed with a fast motion circling around the magnetic field lines. This second, fast motion is called gyration and can be averaged out to reduce the dimension of the phase space in order to make the models more computationally feasible while keeping most of the important physics. The resulting theory is called a gyro-kinetic model which will be discussed in the following.
+% !TeX spellcheck = en_GB
+
+\section{Introduction}
+\label{sec:introduction}
+\subsection{The Gyro-kinetic Model}
+
+In a Tokamak, particles have complicated dynamics in real space which consists of a slow motion along the magnetic field lines superimposed with a fast motion circling around the magnetic field lines. This second, fast motion is called gyration and can be averaged out to reduce the dimension of phase space in order to make the models more computationally feasible while keeping most of the important physics. The resulting theory is called a gyro-kinetic model which will be discussed in the following.
 
 The model is defined by the Lie-transformed, low-frequency particle Lagrangian $L$ \cite{Bottino_Sonnendrucker_2015}
 \begin{equation}\label{Lagrangian}
 	L = \left(e\bA + m \vp \bb \right)\cdot\dbx + \frac{m\sqrt{4\pi}}{e \mu_0^{\frac{3}{2}}} \mu \dot{\theta} - H(\bx, \vp)
 \end{equation}
-with the variables $\bx \in \Omega \subseteq \real^3$, the position of the gyro-centre, $\vp \in \real^3$, the velocity parallel to the magnetic field lines, and $\mu$, the modified magnetic moment. $H$ will be discussed below.
+with the variables $\bx \in \Omega \subseteq \real^3$, the position of the gyro-centre, $\vp \in \real^3$, the velocity parallel to the magnetic field lines, and $\mu$, the modified magnetic moment. The Hamiltonian $H$ will be discussed below.
 
 From the equation of motion for $\theta$ it can be seen immediately that $\mu$ is a constant of the system:
 \begin{equation}
@@ -61,7 +67,7 @@ Splitting between fast and slow steps yields:
 		\end{aligned} \right. \label{split step slow}
 	\end{align}
 \end{subequations}
-Both fast and slow steps are divergence-free and derived from Poisson bracket.
+Both fast and slow steps are divergence-free and derived from a Poisson bracket.
 
 The guiding-centre Poisson bracket reads:
 \begin{subequations}
@@ -78,47 +84,54 @@ For a constant background magnetic field $\bB$, the model is simplified and the 
 		(\text{fast}) = & \left\{ \begin{aligned}
 			\bu_f & = {\vp} \bb \\
 			a_{\parallel, f} & = -\frac{q}{m} \bb \cdot \nabla \phi
-		\end{aligned} \right. \label{split step fast}\\
+		\end{aligned} \right. \label{split step fast const B}\\
 		(\text{slow}) = &  \left\{ \begin{aligned}
 			\bu_s & = \frac{\nabla \phi\times \bb}{\bB}  \\
 			a_{\parallel, s} & = 0
-		\end{aligned} \right. \label{split step slow}
+		\end{aligned} \right. \label{split step slow const B}
 	\end{align}
 \end{subequations}
 We refer to \cite{Latu_2017} for some background on the model. The aim is to look for $f = f(t, r, \theta, z, v_\parallel)$ satisfying
 \[ \partial_t f + \{\phi, f\} + v_\parallel \nabla_\parallel - \nabla_\parallel \phi \partial_{v_\parallel}f = 0, \]
-with the bracket in polar coordinates such that
-\[ \{\phi, f \} = \frac{1}{rB_0}\partial_r \phi\partial_\theta f -\frac{1}{rB_0}\partial_\theta \phi\partial_r f, \qquad \nabla_\parallel = \bb \cdot \nabla. \]
+where $\nabla_\parallel = \bb \cdot \nabla$ and the bracket is in polar coordinates
+\[ \{\phi, f \} = \frac{1}{rB_0}\partial_r \phi\partial_\theta f -\frac{1}{rB_0}\partial_\theta \phi\partial_r f \]
 
 Furthermore, the self-consistent potential $\phi = \phi(t, r, \phi, z)$ solves the quasi neutrality (QN) equation
 \[- \left[\partial_r^2 \phi + \left( \frac{1}{r} + \frac{\partial_r n_0}{n_0}\right)\partial_r \phi + \frac{1}{r^2} \partial_\theta^2 \phi \right] + \frac{1}{T_e} \phi = \int_{-\infty}^{\infty} (f - f_\text{eq}) \ \dd v_\parallel .\]
 
-This is Poisson equation and in the code it is solved using Finite element method (FEM) on a b-spline basis.
+This is the Poisson equation and in the code it is solved using a finite element method (FEM) on a B-spline basis.
 
-Boundary conditions on $f$:\\
-    \begin{itemize}
-        \item Periodicity along $\theta$, $z$ and $v_\parallel$.
-        \item In $r$ direction, either Dirichlet boundary conditions (for the second-order scheme only) or extrapolation to an outside equilibrium function
-    \end{itemize}
-Boundary conditions on $\phi$ :\\
-    \begin{itemize}
-        \item Periodic along $\theta$ and $v_\parallel$.
-        \item Decomposing $\phi$ into Fourier modes, at $r_\text{min}$, we take homogeneous Neumann boundary conditions for the zeroth mode and homogeneous boundary conditions for the others. At $r_\text{max}$, we just take homogeneous Dirichlet boundary conditions.
+
+
+
+\subsection{Boundary Conditions and Conservation Laws}
+
+Boundary conditions on $f$ are
+\begin{itemize}
+    \item Periodicity along $\theta$ and $z$.
+    \item Boundary conditions along $v_\parallel$ %TODO
+    \item In $r$ direction, either Dirichlet boundary conditions (for the second-order scheme only) or extrapolation to an outside equilibrium function
+\end{itemize}
+
+For the boundary conditions on $\phi$ we take
+\begin{itemize}
+    \item Periodic along $\theta$.
+    \item Boundary Conditions along $z$ %TODO
+    \item In $r$-direction, $\phi$ is decomposed into Fourier modes. At $r_\text{min}$, we take homogeneous Neumann boundary conditions for the zeroth mode and homogeneous boundary conditions for the others. At $r_\text{max}$, we just take homogeneous Dirichlet boundary conditions.
 \end{itemize}
 
 \textbf{Conserved Quantities}\\
-Firstly, we have conservative form \eqref{conservation1}. Secondly, \eqref{drift-kinetic model} conserves arbitrary functions
-of $f$  along nonlinear characteristics,
+Firstly, we have a transport equation in conservative form \eqref{conservation1}. Secondly, \eqref{drift-kinetic model} conserves arbitrary functions of $f$  along nonlinear characteristics,
 \begin{equation}
-\frac{D}{Dt} C(f)+\bracket{C(f)}{H} =0,
+\dt C(f) + \bracket{C(f)}{H} =0,
 \end{equation}
-and the Casimir invariant $\int C( f ) d^5R$ is also conserved.
-Therefore, in addition to the particle number or the L1 norm $\int f d^5R$, the system has an infinite number of conserved quantities such as the L2 norm $\int f^2 d^5R$, and the kinetic entropy $S=\int f \ln(f) d^5R$. 
-Thirdly, the gyrokinetic equations conserve the total energy $H=E_k+E_f$:
+and the Casimir invariant $\int C( f ) d^5R$ is also conserved. Therefore, in addition to the particle number or the $L^1$-norm $\int f d^5R$, the system has an infinite number of conserved quantities such as the $L^2$-norm $\int f^2 d^5R$, and the kinetic entropy $S=\int f \ln(f) d^5R$.
+
+Thirdly, the gyrokinetic equations conserve the total energy $H = E_k + E_f$:
 \begin{subequations}
 	\begin{align}
 		E_k &= \frac{1}{2} m \vp^2 + \mu B(\bx),\\
 		E_f &= q \mean{\phi}_\alpha (t,\bx).
 	\end{align}
 \end{subequations}
-where $E_k$ is the kinetic energy and $E_f$ is the field energy, please see the details in \cite{idomura2008conservative}.
+where $E_k$ is the kinetic energy and $E_f$ is the field energy. For more details on this, we refer the reader to \cite{idomura2008conservative}.
