@@ -1,3 +1,9 @@
+% !TeX spellcheck = en_GB
+
+
+\section{Order of Convergence for the Arakawa Scheme}
+\label{sec:ara_order}
+
 In order to calculate the convergence order of the different Finite Difference schemes, we use Mathematica and define the series expansion at every grid-point used in the stencil. Then introducing the discrete Jacobians, that will approximate our Poisson bracket, we combine them to the full Arakawa scheme and look at the appearing orders. The Mathematica input is written in bold font, while the output is following after. \\ 
 
 \noindent\(	\pmb{F[\text{i$\_$}, \text{j$\_$}] = \text{Series}[f[x+i*h,y+j*h], \{h,0, 3\}, \{h,0, 3\}] \ \text{//}\text{Normal};}\\
