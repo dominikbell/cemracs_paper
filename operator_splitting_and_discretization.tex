@@ -3,8 +3,7 @@
 \section{Operator Splitting and Discretization}
 \label{sec:splitting_discretization}
 
-It is a common tool to split a PDE in several sub-steps in order to do the numerical integration. This simplifies the equation tremendously at the cost of introducing some numerical error. Multiple sub-flows can be recombined to yield an approximation to a time-step of the full PDE; most commonly used methods for this are the \textbf{Strang splitting} which is of first order, and \textbf{Lie splitting} which is a second order method (for more details see [emily thesis] %TODO: Add citation
-). In the code \cite{pygyro_code} Lie splitting is used for a predictor step and then Strang splitting to compute the full time-step from the predicted distribution function.
+It is a common tool to split a PDE in several sub-steps in order to do the numerical integration. This simplifies the equation tremendously at the cost of introducing some numerical error. Multiple sub-flows can be recombined to yield an approximation to a time-step of the full PDE; most commonly used methods for this are the \textbf{Strang splitting} which is of first order, and \textbf{Lie splitting} which is a second order method (for more details see \cite{emily}). In the code \cite{pygyro_code} Lie splitting is used for a predictor step and then Strang splitting to compute the full time-step from the predicted distribution function.
 
 We can split our equation 
 \begin{equation}
@@ -29,10 +28,9 @@ In our work, we will use two different approaches to solving these equations. Fo
 
 
 
-
 \subsection{Semi-Lagrangian Scheme for the Fast Time Subsystem}
 
-The fast time subsystem will be solved using semi-Lagrangian scheme. As reference we will use \cite{campospinto} and [emily thesis]. %TODO: add citation
+The fast time subsystem will be solved using semi-Lagrangian scheme. As reference we will use \cite{campospinto} and \cite{emily}.
 The code for this part can be found at \cite{pygyro_code}. We will use general notations in the beginning and then move on to the specific problem we have in our model. This scheme is frequently used in solving advection problems of the form:
 \begin{equation}
     \partial_t f(t,\mathbf{x})+v(t,\mathbf{x})\cdot \nabla f(t,\mathbf{x})=0, \qquad t\in[0,T], \quad \mathbf{x}\in\mathbb{R}^d
@@ -150,66 +148,67 @@ Then
 $$a_{i,0;i+1,0}-a_{i-1,0;i,0}-\frac{1}{12d^2}(2g_{i+1,0}-2g_{i-1,0}+g_{i+1,1}-g_{i-1,1})=0.$$
 Rewrite it as 
 $$a_{i,0;i+1,0}-\frac{1}{12d^2}(g_{i,1}+g_{i+1,1}-g_{i,0}-g_{i+1,0})=a_{i-1,0;i,0}-\frac{1}{12d^2}(g_{i-1,1}+g_{i,1}-g_{i-1,0}-g_{i,0}).$$
-Right hand side has the same formula with left hand side by replacing i by i-1. Each term is not depend on i, so it is constant. Because this term $a_{i,0;i+1,0}(f_{i+1,0}+f_{i,0})-a_{i-1,0;i,0}(f_{i-1,0}+f_{i-1,0})$ is a approximation of $-\partial_y g \partial_x f$ on the boundary, so the constant is 0.
-At last, we have $$a_{i,0;i+1,0}=\frac{1}{12d^2}(g_{i,1}+g_{i+1,1}-g_{i,0}-g_{i+1,0})$$ and $$a_{i-1,0;i,0}=\frac{1}{12d^2}(g_{i-1,1}+g_{i,1}-g_{i-1,0}-g_{i,0}).$$ 
+The right hand side has the same formula with left hand side by replacing $i$ by $i-1$. Each term is not dependant on $i$, so it is constant. Because this term $a_{i,0;i+1,0}(f_{i+1,0}+f_{i,0})-a_{i-1,0;i,0}(f_{i-1,0}+f_{i-1,0})$ is a approximation of $-\partial_y g \partial_x f$ on the boundary, so the constant is 0.
+
+At last, we have
+\begin{align}
+	a_{i,0;i+1,0} & = \frac{1}{12d^2}(g_{i,1}+g_{i+1,1}-g_{i,0}-g_{i+1,0}) &
+	a_{i-1,0;i,0} & = \frac{1}{12d^2}(g_{i-1,1}+g_{i,1}-g_{i-1,0}-g_{i,0})
+\end{align}
+
 That is,
 \begin{equation}
-\begin{aligned}
-\frac{1}{2}J_{i0} (f,g) &=-\frac{1}{12d^2}[(-g_{i,1}-g_{i+1,1}+g_{i,0}+g_{i+1,0})(f_{i+1,0}+f_{i,0})\\
-&-(-g_{i-1,1}-g_{i,1}+g_{i-1,0}+g_{i,0})(f_{i-1,0}+f_{i,0})\\
-&+(g_{i+1,0}+g_{i+1,1}-g_{i-1,0}-g_{i-1,1})(f_{i,0}+f_{i,1})\\
-&+(g_{i+1,0}-g_{i,1})(f_{i,0}+f_{i+1,1})\\
-&+(g_{i,1}-g_{i-1,0})(f_{i-1,1}+f_{i,0})].
-\end{aligned}
+	\begin{aligned}
+		\frac{1}{2}J_{i0} (f,g) & = -\frac{1}{12d^2}[(-g_{i,1}-g_{i+1,1}+g_{i,0}+g_{i+1,0})(f_{i+1,0}+f_{i,0})\\
+		& \quad - (-g_{i-1,1}-g_{i,1}+g_{i-1,0}+g_{i,0})(f_{i-1,0}+f_{i,0})\\
+		& \quad + (g_{i+1,0}+g_{i+1,1}-g_{i-1,0}-g_{i-1,1})(f_{i,0}+f_{i,1})\\
+		& \quad + (g_{i+1,0}-g_{i,1})(f_{i,0}+f_{i+1,1})\\
+		& \quad + (g_{i,1}-g_{i-1,0})(f_{i-1,1}+f_{i,0})].
+	\end{aligned}
 \end{equation}
 Similarly, we obtain the scheme for boundary $j=J$:
 \begin{equation}
-\begin{aligned}
-\frac{1}{2}J_{iJ} (f,g) &=-\frac{1}{12d^2}[(g_{i,J-1}+g_{i+1,J-1}-g_{i,J}-g_{i+1,J})(f_{i+1,J}+f_{i,J})\\
-&-(g_{i-1,J-1}+g_{i,J-1}-g_{i-1,J}-g_{i,J})(f_{i-1,J}+f_{i,J})\\
-&-(g_{i+1,J}+g_{i+1,J-1}-g_{i-1,J}-g_{i-1,J-1})(f_{i,J}+f_{i,J-1})\\
-&-(g_{i+1,J}-g_{i,J-1})(f_{i,J}+f_{i+1,J-1})\\
-&-(g_{i,J-1}-g_{i-1,J})(f_{i-1,J-1}+f_{i,J})].
-\end{aligned}
+	\begin{aligned}
+		\frac{1}{2}J_{iJ} (f,g) & = -\frac{1}{12d^2}[(g_{i,J-1}+g_{i+1,J-1}-g_{i,J}-g_{i+1,J})(f_{i+1,J}+f_{i,J})\\
+		& \quad - (g_{i-1,J-1}+g_{i,J-1}-g_{i-1,J}-g_{i,J})(f_{i-1,J}+f_{i,J})\\
+		& \quad - (g_{i+1,J}+g_{i+1,J-1}-g_{i-1,J}-g_{i-1,J-1})(f_{i,J}+f_{i,J-1})\\
+		& \quad - (g_{i+1,J}-g_{i,J-1})(f_{i,J}+f_{i+1,J-1})\\
+		& \quad - (g_{i,J-1}-g_{i-1,J})(f_{i-1,J-1}+f_{i,J})].
+	\end{aligned}
 \end{equation}
-The discrete integral constraint $gf$ is $$\sum_{i}[ \frac{1}{2}g_{i,0}J_{i0}+\sum_{j=1}^{J-1} g_{i,j}J_{ij}+\frac{1}{2}g_{i,J}J_{iJ}].$$ %TODO: This is not even an equation.
+The discrete integral constraint $gf$ is $$\sum_{i}\left[ \frac{1}{2}g_{i,0}J_{i0}+\sum_{j=1}^{J-1} g_{i,j}J_{ij}+\frac{1}{2}g_{i,J}J_{iJ} \right].$$ %TODO: This is not even an equation.
 
-\begin{remark}
-For second order Arakawa scheme with g Dirichlet boundary condition, we can take $g_{i,0}=g_{i,-1}$ as a constant. However we can't directly modify fourth order scheme in this way by taking $g_{i,0}=g_{i,-1}=g_{i,-2}$ since the coefficients  $a_{i,0;i,-1}=\frac{1}{8d^2}(g_{i-1,1}-g_{i+1,0})$ and $a_{i,0;i+1,-1}=\frac{-1}{8d^2}(g_{i+1,1}-g_{i-1,0})$ (from $J^{\times \times}$) are not 0, so that we can't use half stencil. If we use half stencil, the coefficients can not be balanced, so we can't keep the conservation. 
-\end{remark}
+\textbf{Remark:} For the second order Arakawa scheme with $g$ Dirichlet boundary condition, we can take $g_{i,0}=g_{i,-1}$ as a constant. However we can't directly modify fourth order scheme in this way by taking $g_{i,0}=g_{i,-1}=g_{i,-2}$ since the coefficients  $a_{i,0;i,-1}=\frac{1}{8d^2}(g_{i-1,1}-g_{i+1,0})$ and $a_{i,0;i+1,-1}=\frac{-1}{8d^2}(g_{i+1,1}-g_{i-1,0})$ (from $J^{\times \times}$) are not 0, so that we can't use half stencil. If we use half stencil, the coefficients can not be balanced, so we can't keep the conservation.
 
-If function $f$ is constant at boundary: By $J_{ij}=-J_{ji}$, exchanging the position of f and g, we can get the scheme for the boundary f constant case:
-
-for $j=0$:
-
+If function $f$ is constant at boundary: By $J_{ij}=-J_{ji}$, exchanging the position of f and g, we can get the scheme for the boundary f constant case. For $j=0$:
 \begin{equation}
-\begin{aligned}
-\frac{1}{2}J_{i0} (f,g) &=\frac{1}{12d^2}[(-f_{i,1}-f_{i+1,1}+f_{i,0}+f_{i+1,0})(g_{i+1,0}+g_{i,0})\\
-&-(-f_{i-1,1}-f_{i,1}+f_{i-1,0}+f_{i,0})(g_{i-1,0}+g_{i,0})\\
-&+(f_{i+1,0}+f_{i+1,1}-f_{i-1,0}-f_{i-1,1})(g_{i,0}+g_{i,1})\\
-&+(f_{i+1,0}-f_{i,1})(g_{i,0}+g_{i+1,1})\\
-&+(f_{i,1}-f_{i-1,0})(g_{i-1,1}+g_{i,0})].
-\end{aligned}
+	\begin{aligned}
+		\frac{1}{2}J_{i0} (f,g) & = \frac{1}{12d^2}[(-f_{i,1}-f_{i+1,1}+f_{i,0}+f_{i+1,0})(g_{i+1,0}+g_{i,0})\\
+		&\quad - (-f_{i-1,1}-f_{i,1}+f_{i-1,0}+f_{i,0})(g_{i-1,0}+g_{i,0})\\
+		&\quad + (f_{i+1,0}+f_{i+1,1}-f_{i-1,0}-f_{i-1,1})(g_{i,0}+g_{i,1})\\
+		&\quad + (f_{i+1,0}-f_{i,1})(g_{i,0}+g_{i+1,1})\\
+		&\quad + (f_{i,1}-f_{i-1,0})(g_{i-1,1}+g_{i,0})].
+	\end{aligned}
 \end{equation}
-
-for $j=J$:
-
+and for $j=J$:
 \begin{equation}
-\begin{aligned}
-\frac{1}{2}J_{iJ} (f,g) &=\frac{1}{12d^2}[(f_{i,J-1}+f_{i+1,J-1}-f_{i,J}-f_{i+1,J})(g_{i+1,J}+g_{i,J})\\
-&-(f_{i-1,J-1}+f_{i,J-1}-f_{i-1,J}-f_{i,J})(g_{i-1,J}+g_{i,J})\\
-&-(f_{i+1,J}+f_{i+1,J-1}-f_{i-1,J}-f_{i-1,J-1})(g_{i,J}+g_{i,J-1})\\
-&-(f_{i+1,J}-f_{i,J-1})(g_{i,J}+g_{i+1,J-1})\\
-&-(f_{i,J-1}-f_{i-1,J})(g_{i-1,J-1}+g_{i,J})].
-\end{aligned}
+	\begin{aligned}
+		\frac{1}{2}J_{iJ} (f,g) & = \frac{1}{12d^2}[(f_{i,J-1}+f_{i+1,J-1}-f_{i,J}-f_{i+1,J})(g_{i+1,J}+g_{i,J})\\
+		& \quad - (f_{i-1,J-1}+f_{i,J-1}-f_{i-1,J}-f_{i,J})(g_{i-1,J}+g_{i,J})\\
+		& \quad - (f_{i+1,J}+f_{i+1,J-1}-f_{i-1,J}-f_{i-1,J-1})(g_{i,J}+g_{i,J-1})\\
+		& \quad - (f_{i+1,J}-f_{i,J-1})(g_{i,J}+g_{i+1,J-1})\\
+		& \quad - (f_{i,J-1}-f_{i-1,J})(g_{i-1,J-1}+g_{i,J})].
+	\end{aligned}
 \end{equation}
+
+
 
 
 
 
 \subsubsection{Extrapolation at boundary for the 4th order Arakawa}
 
-It is easy to get 4th order convergence, but how about conservation properties?
+It is easy to get 4th order convergence, but how about conservation properties? %TODO: elaborate or remove
 
 \textbf{Arakawa with homogeneous dirichlet boundary:}\\
 In \cite{crouseilles2018exponential}, they show that the mass of Arakawa scheme for dirichlet boundary is not conserved up to machine precision, even for homogeneous Dirichlet boundary conditions. By their numerical experiments, the Arakawa scheme works better for homogeneous boundary condition. In their test, they assume that $f(r_{min}, \theta,z,v)=f_{eq}(r_{min},v)$ and $f(r_{max}, \theta,z,v)=f_{eq}(r_{max},v)$ but not homogeneous Dirichlet boundary. In addition to the direct formulation, we can also introduce a so-called perturbation formulation by dividing f into $f=f_{eq}+\delta f(t,r,\theta,v)$. With this formulation, our model problem can be written as 
