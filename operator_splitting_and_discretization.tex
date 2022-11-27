@@ -3,9 +3,10 @@
 \section{Operator Splitting and Discretization}
 \label{sec:splitting_discretization}
 
-\textbf{Strang splitting} is a numerical tool which can be used in numerical computation of PDEs, coupled together with the \textbf{Lie splitting} %TODO Strang splitting and Lie splitting are not seperate tools, are they?
-gives us the resulting equations which are much simpler for solving with reasonable error (for more details see [emily thesis] %TODO: Add citation
-). We can split our equation 
+It is a common tool to split a PDE in several sub-steps in order to do the numerical integration. This simplifies the equation tremendously at the cost of introducing some numerical error. Multiple sub-flows can be recombined to yield an approximation to a time-step of the full PDE; most commonly used methods for this are the \textbf{Strang splitting} which is of first order, and \textbf{Lie splitting} which is a second order method (for more details see [emily thesis] %TODO: Add citation
+). In the code \cite{pygyro_code} Lie splitting is used for a predictor step and then Strang splitting to compute the full time-step from the predicted distribution function.
+
+We can split our equation 
 \begin{equation}
  \partial_t f + \{\phi, f \} + v_\parallel \nabla_\parallel f - \nabla_\parallel \phi\,\, \partial_{v_\parallel} f = 0
 \end{equation}
