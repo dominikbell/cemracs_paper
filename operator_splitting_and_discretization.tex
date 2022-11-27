@@ -1,55 +1,74 @@
-\textbf{Strang splitting} is a numerical tool which can be used in numerical computation of PDEs, coupled together with the \textbf{Lie splitting} gives us the resulting equations which are much simpler for solving with reasonable error (for more details see \cite{emily}). In our equation 
+% !TeX spellcheck = en_GB
+
+\section{Operator Splitting and Discretization}
+\label{sec:splitting_discretization}
+
+It is a common tool to split a PDE in several sub-steps in order to do the numerical integration. This simplifies the equation tremendously at the cost of introducing some numerical error. Multiple sub-flows can be recombined to yield an approximation to a time-step of the full PDE; most commonly used methods for this are the \textbf{Strang splitting} which is of first order, and \textbf{Lie splitting} which is a second order method (for more details see [emily thesis] %TODO: Add citation
+). In the code \cite{pygyro_code} Lie splitting is used for a predictor step and then Strang splitting to compute the full time-step from the predicted distribution function.
+
+We can split our equation 
 \begin{equation}
  \partial_t f + \{\phi, f \} + v_\parallel \nabla_\parallel f - \nabla_\parallel \phi\,\, \partial_{v_\parallel} f = 0
 \end{equation}
-for distribution function $f$ we can split numerical computations into three advection equations:
-\begin{equation}
- \partial_t f + v_\parallel \nabla_\parallel f = 0 \qquad \text{Advection on flux surface}
-\end{equation}
-\begin{equation}
- \partial_t f + \nabla_\parallel \phi\,\, \partial_{v_{\parallel}} f = 0 \qquad \text{V-parallel advection}
- \end{equation}
-\begin{equation}
- \partial_t f + \{\phi, f\} = 0 \qquad \text{Advection on poloidal plane}
-\end{equation}
+for the distribution function $f$ into three advection equations:
+\begin{subequations}
+	\begin{align}
+		\partial_t f + v_\parallel \nabla_\parallel f & = 0 && \text{Advection on flux surface} & \\
+		\partial_t f + \nabla_\parallel \phi\,\, \partial_{v_{\parallel}} f & = 0 && \text{V-parallel advection} & \\
+		\partial_t f + \{\phi, f\} & = 0 && \text{Advection on poloidal plane} &
+	\end{align}
+\end{subequations}
 where $\{\phi,f\}$ is a Poisson bracket, defined as follows:
 \begin{equation}
  \{\phi,f\}=-\frac{\partial_\theta\phi}{rB_0}\partial_r f + \frac{\partial_r\phi}{rB_0}\partial_\theta f.
 \end{equation}
-In our work, we will use two different approaches to solving these three equations. For the first two we will use the semi-Lagrangian scheme and for the third Arakawa scheme.
+In our work, we will use two different approaches to solving these equations. For the first two we will use the semi-Lagrangian scheme and for the third equation we will use the Arakawa scheme.
 
-\subsection{Semi-Lagrangian scheme for fast time subsystem}
-The fast time subsystem will be solved using semi-Lagrangian scheme. As reference we will use \cite{campospinto} and \cite{emily}. The code for this part can be found at \cite{pygyro_code}. To begin with, we will use general notations and then we will move on to the problem we have in our model. This scheme is frequently used in solving advection problems of the form:
 
+
+
+
+
+\subsection{Semi-Lagrangian Scheme for the Fast Time Subsystem}
+
+The fast time subsystem will be solved using semi-Lagrangian scheme. As reference we will use \cite{campospinto} and [emily thesis]. %TODO: add citation
+The code for this part can be found at \cite{pygyro_code}. We will use general notations in the beginning and then move on to the specific problem we have in our model. This scheme is frequently used in solving advection problems of the form:
 \begin{equation}
     \partial_t f(t,\mathbf{x})+v(t,\mathbf{x})\cdot \nabla f(t,\mathbf{x})=0, \qquad t\in[0,T], \quad \mathbf{x}\in\mathbb{R}^d
 \end{equation}
-where $v$ is a velocity field $\mathbb{R}^d\longrightarrow\mathbb{R}^d$, $T$ is a final time and initial conditions is given by $f_0(\mathbf{x})=f(0,\mathbf{x})$. For the simplicity, we will assume that $v$ is given and smooth enough so we can use method of characteristics. Let say that under the smooth assumptions we have trajectories $X(t)=X(t;s,\mathbf{x})$ which are obtained as a solution to ODE
+where $v$ is a velocity field $\mathbb{R}^d\longrightarrow\mathbb{R}^d$, $T$ is a final time, and initial conditions are given by $f_0(\mathbf{x})=f(0,\mathbf{x})$. For simplicity, we will assume that $v$ is given and smooth enough so we can use the method of characteristics. Thus we can obtain the trajectories $X(t)=X(t;s,x)$ as a solutions to ODE
 \begin{equation}
-    X'(t)=v(t,X(t)), \qquad X(s)=\mathbf{x}, \qquad t\in[0,T].
+    X'(t)=v(t,X(t)), \qquad X(s)=x, \qquad t\in[0,T].
 \end{equation}
-It can be shown that the flow $F_{s,t}:\mathbf{x}\longrightarrow X(t)$ is invertible and satisfies $(F_{s,t})^{-1}=F_{t,s}$. We know that analytical solution to our equation is given by
+It can be shown that the flow $F_{s,t}:x\longrightarrow X(t)$ is invertible and satisfies $(F_{s,t})^{-1}=F_{t,s}$. We know that the analytical solution to our equation is given by
 \begin{equation}
-    f(t,\mathbf{x})=f_0((F_{0,t})^{-1}(\mathbf{x})),\qquad \text{for } t\in[0,T], \quad \mathbf{x}\in\mathbb{R}^d.
+    f(t,\mathbf{x})=f_0((F_{0,t})^{-1}(\bx)),\qquad \text{for } t\in[0,T], \quad \mathbf{x}\in\mathbb{R}^d.
 \end{equation}
 Now we are using backward tracking of the characteristic
 \begin{equation}
     B^{n,n+1}=(F_{t_n,t_{n+1}})^{-1}
 \end{equation}
-between two time steps $t_n=n\Delta t$ and $t_{n+1}$. For the last step we have to approximate function $f$ at grid points $f^n=f(t_n)$. For this purpose, we will use splines.\\
-The flux surface advection operator defined by equation
+between two time steps $t_n=n\Delta t$ and $t_{n+1}$. For the last step we have to approximate the function $f$ at the grid points $f^n=f(t_n)$. For this purpose, we will use splines.
+
+The flux surface advection operator defined by the equation
 \begin{equation}
  \partial_t f + v_\parallel \nabla_\parallel f = 0
 \end{equation}
-is a two-dimensional semi-Lagrangian operator. Here we can determine the exact trajectory because the velocity in the equation is constant and is not related to the surface of the flux.\\
-In order to determine the value of the distribution function in the discretization grid for characteristics that go outside our domain, we use a combination of a one-dimensional cubic spline and a Lagrangian interpolation polynomial of the fifth order in the $\theta$ and $z$ directions, respectively. In this way, we get an approximation of the value of the function in the final position.\\
+and is a two-dimensional semi-Lagrangian operator. Here we can determine the exact trajectory because the velocity in the equation is constant and is not related to the surface of the flux.
+
+In order to determine the value of the distribution function in the discretization grid for characteristics that go outside our domain, we use a combination of a one-dimensional cubic spline and a Lagrangian interpolation polynomial of fifth order in $\theta$ and $z$ directions, respectively. In this way, we get an approximation of the value of the function in the final position.
+
 The v$_\parallel$ surface advection operator defined by equation
 \begin{equation}
     \partial_t f + \nabla_\parallel \phi\,\, \partial_{v_{\parallel}} f = 0
 \end{equation}
-is a one-dimensional semi-Lagrangian operator and here we use a cubic spline to determine the value of the particle distribution function for characteristics that go outside the domain. The parallel gradient $\phi$ depends only on the spatial coordinates and is therefore constant along the surface v$_\parallel$. As a result, the trajectory used by the semi-Lagrangian method can be accurately defined. The parallel gradient $\phi$ is computed using 6th-order finite differences (field-aligned) in the $z$ direction. This was calculated as described by Latu et al. \cite{Latu_2017}.
+and is a one-dimensional semi-Lagrangian operator. Here we use a cubic spline to determine the value of the particle distribution function for characteristics that go outside the domain. The parallel gradient of $\phi$ depends only on the spatial coordinates and is therefore constant along the surface $v_\parallel$. As a result, the trajectory used by the semi-Lagrangian method can be accurately defined. The parallel gradient of $\phi$ is computed using a (field-aligned) finite difference method of order 6 in the $z$ direction. This was calculated as described by Latu et al. \cite{Latu_2017}.
 
-\subsection{Arakawa scheme for slow time subsystem}
+
+
+
+
+\subsection{Arakawa Scheme for the Slow Time Subsystem}
 
 For the Arakawa scheme, we mainly reference the article \cite{Arakawa_1966}. Here we are interested in solving the advection on poloidal plane:
 \begin{equation}
@@ -59,15 +78,20 @@ where $\{\phi,f\}$ is a Poisson bracket, defined as follows:
 \begin{equation}
  \{\phi,f\}=-\frac{\partial_\theta\phi}{rB_0}\partial_r f + \frac{\partial_r\phi}{rB_0}\partial_\theta f.
 \end{equation}
-The Arakawa scheme provably preserves the following quantities:
+The Arakawa scheme provably preserves the following quantities: %TODO: add proof
 	\begin{align*}
 		\text{mass} : && \dt \int f(t) \d x \text{d} y & = 0 & \Leftrightarrow && \int\bracket{\phi}{f} \d x \text{d} y & = 0 \\
 		L^2\text{-norm :} && \dt \int f^2(t) \d x \text{d} y & = 0 & \Leftrightarrow && \int f \, \bracket{\phi}{f} \d x \text{d} y & = 0 \\
 		\text{total energy :} && \dt \int \phi \, f(t) \d x \text{d} y & = 0 & \Leftrightarrow && \int \phi \bracket{\phi}{f} \d x \text{d} y & = 0
 	\end{align*}
-First we will focus on discretization of Poisson bracket in Cartesian coordinates. The scheme in polar coordinates is analogous.\\
+First we will focus on discretization of Poisson bracket in Cartesian coordinates. The scheme in polar coordinates is analogous.
 
-\textbf{The main idea of Arakawa scheme - construction of the 4th order bracket approximation:}\\
+
+
+
+
+\subsubsection{Construction of a Discrete Bracket using the Arakawa Method}
+
 The first step in constructing the 4th order Arakawa scheme is to explain second order discretization using nine point stencil. We have approximation of $J(f,g)$ at $(i,j)$ of the following form
 \begin{equation}
 J(f,g)=\frac{1}{3}(J^{++}+J^{+\times}+J^{\times+})+\mathcal{O}(d^2)
@@ -83,11 +107,12 @@ and
 \begin{equation}
     J^{\times+}_{ij}=\frac{1}{4d^2}[f_{i+1,j+1}(g_{i,j+1}-g_{i+1,j})-f_{i-1,j-1}(g_{i-1,j}-g_{i,j-1})-f_{i-1,j+1}(g_{i,j+1}-g_{i-1,j})+f_{i+1,j-1}(g_{i+1,j}-g_{i,j-1})]
 \end{equation}
-We denote the linear combination $J_1=\frac{1}{3}(J^{++}+J^{+\times}+J^{\times+})$, which is a second order approximation conserving the square of vorticity and the energy.\\
-In order to extend discretization to 4th order we introduce $J_2=\frac{1}{3}(J^{\times \times}+J^{\times+}+J^{+\times})$ where we use the same nine point stencil with the additional
+We denote the linear combination $J_1=\frac{1}{3}(J^{++}+J^{+\times}+J^{\times+})$, which is a second order approximation conserving the square of vorticity and the energy.
+
+In order to extend the discretization to 4th order we introduce $J_2=\frac{1}{3}(J^{\times \times} + J^{\times+} + J^{+\times})$ where we use the same nine point stencil with the additional
 four points $(i+2,j)$, $(i-2,j)$, $(i,j+2)$  and $(i,j-2)$ for $J_2$, where
 \begin{equation}
-    J^{\times\times}_{ij}=\frac{1}{8d^2}[(f_{i+1,j+1}-f_{i-1,j-1})(g_{i-1,j+1}-g_{i+1,j-1})-(f_{i-1,j+1}-f_{i+1,j-1})(g_{i+1,j+1}-g_{i-1,j-1})]
+    J^{\times\times}_{ij}=\frac{1}{8d^2}[(f_{i+1,j+1}-f_{i-1,j-1})(g_{i-1,j+1}-g_{i+1,j-1})-(f_{i-1,j+1}-f_{i+1,j-1})(g_{i+1,j+1}-g_{i-1,j-1})], 
 \end{equation}
 \begin{equation}
     J^{\times+}_{ij}=\frac{1}{8d^2}[f_{i+1,j+1}(g_{i,j+2}-g_{i+2,j})-f_{i-1,j-1}(g_{i-2,j}-g_{i,j-2})-f_{i-1,j+1}(g_{i,j+2}-g_{i-2,j})+f_{i+1,j-1}(g_{i+2,j}-g_{i,j-2})],
@@ -99,10 +124,13 @@ and
 By Taylor extension, we can see that $2J_1-J_2$ is a fourth order approximation of the Jacobian $J$; that is,
 $2J_1-J_2=J+O(d^4)$.
 Now we have the second-order nine-point
-scheme and the fourth-order thirteen-point scheme. For the proof of the stencil order, we refer to appendix \ref{sec:ara_order}.\\
+scheme and the fourth-order thirteen-point scheme. For the proof of the stencil order, we refer to appendix \ref{sec:ara_order}.
 
-\noindent
-\textbf{Boundary Conditions}\\
+
+
+
+\subsubsection{Boundary Conditions}
+
 Let show first what is happening if $g$ is constant at boundary. By
 \begin{equation}
     J_{ij}(f,g)=\sum^*_{i',j'}[a_{i,j;i+i',j+j'}(f_{i+i',j+j'}+f_{i,j})-a_{i-i',j-j';i,j}(f_{i,j}+f_{i-i',j-j'})].
@@ -121,63 +149,61 @@ Then
 $$a_{i,0;i+1,0}-a_{i-1,0;i,0}-\frac{1}{12d^2}(2g_{i+1,0}-2g_{i-1,0}+g_{i+1,1}-g_{i-1,1})=0.$$
 Rewrite it as 
 $$a_{i,0;i+1,0}-\frac{1}{12d^2}(g_{i,1}+g_{i+1,1}-g_{i,0}-g_{i+1,0})=a_{i-1,0;i,0}-\frac{1}{12d^2}(g_{i-1,1}+g_{i,1}-g_{i-1,0}-g_{i,0}).$$
-Right hand side has the same formula with left hand side by replacing i by i-1. Each term is not depend on i, so it is constant. Because this term $a_{i,0;i+1,0}(f_{i+1,0}+f_{i,0})-a_{i-1,0;i,0}(f_{i-1,0}+f_{i-1,0})$ is a approximation of $-\partial_y g \partial_x f$ on the boundary, so the constant is 0.
-At last, we have $$a_{i,0;i+1,0}=\frac{1}{12d^2}(g_{i,1}+g_{i+1,1}-g_{i,0}-g_{i+1,0})$$ and $$a_{i-1,0;i,0}=\frac{1}{12d^2}(g_{i-1,1}+g_{i,1}-g_{i-1,0}-g_{i,0}).$$ 
+The right hand side has the same formula with left hand side by replacing $i$ by $i-1$. Each term is not dependant on $i$, so it is constant. Because this term $a_{i,0;i+1,0}(f_{i+1,0}+f_{i,0})-a_{i-1,0;i,0}(f_{i-1,0}+f_{i-1,0})$ is a approximation of $-\partial_y g \partial_x f$ on the boundary, so the constant is 0.
+
+At last, we have
+\begin{align}
+	a_{i,0;i+1,0} & = \frac{1}{12d^2}(g_{i,1}+g_{i+1,1}-g_{i,0}-g_{i+1,0}) &
+	a_{i-1,0;i,0} & = \frac{1}{12d^2}(g_{i-1,1}+g_{i,1}-g_{i-1,0}-g_{i,0})
+\end{align}
+
 That is,
 \begin{equation}
-\begin{aligned}
-\frac{1}{2}J_{i0} (f,g) &=-\frac{1}{12d^2}[(-g_{i,1}-g_{i+1,1}+g_{i,0}+g_{i+1,0})(f_{i+1,0}+f_{i,0})\\
-&-(-g_{i-1,1}-g_{i,1}+g_{i-1,0}+g_{i,0})(f_{i-1,0}+f_{i,0})\\
-&+(g_{i+1,0}+g_{i+1,1}-g_{i-1,0}-g_{i-1,1})(f_{i,0}+f_{i,1})\\
-&+(g_{i+1,0}-g_{i,1})(f_{i,0}+f_{i+1,1})\\
-&+(g_{i,1}-g_{i-1,0})(f_{i-1,1}+f_{i,0})].
-\end{aligned}
+	\begin{aligned}
+		\frac{1}{2}J_{i0} (f,g) & = -\frac{1}{12d^2}[(-g_{i,1}-g_{i+1,1}+g_{i,0}+g_{i+1,0})(f_{i+1,0}+f_{i,0})\\
+		& \quad - (-g_{i-1,1}-g_{i,1}+g_{i-1,0}+g_{i,0})(f_{i-1,0}+f_{i,0})\\
+		& \quad + (g_{i+1,0}+g_{i+1,1}-g_{i-1,0}-g_{i-1,1})(f_{i,0}+f_{i,1})\\
+		& \quad + (g_{i+1,0}-g_{i,1})(f_{i,0}+f_{i+1,1})\\
+		& \quad + (g_{i,1}-g_{i-1,0})(f_{i-1,1}+f_{i,0})].
+	\end{aligned}
 \end{equation}
 Similarly, we obtain the scheme for boundary $j=J$:
 \begin{equation}
-\begin{aligned}
-\frac{1}{2}J_{iJ} (f,g) &=-\frac{1}{12d^2}[(g_{i,J-1}+g_{i+1,J-1}-g_{i,J}-g_{i+1,J})(f_{i+1,J}+f_{i,J})\\
-&-(g_{i-1,J-1}+g_{i,J-1}-g_{i-1,J}-g_{i,J})(f_{i-1,J}+f_{i,J})\\
-&-(g_{i+1,J}+g_{i+1,J-1}-g_{i-1,J}-g_{i-1,J-1})(f_{i,J}+f_{i,J-1})\\
-&-(g_{i+1,J}-g_{i,J-1})(f_{i,J}+f_{i+1,J-1})\\
-&-(g_{i,J-1}-g_{i-1,J})(f_{i-1,J-1}+f_{i,J})].
-\end{aligned}
+	\begin{aligned}
+		\frac{1}{2}J_{iJ} (f,g) & = -\frac{1}{12d^2}[(g_{i,J-1}+g_{i+1,J-1}-g_{i,J}-g_{i+1,J})(f_{i+1,J}+f_{i,J})\\
+		& \quad - (g_{i-1,J-1}+g_{i,J-1}-g_{i-1,J}-g_{i,J})(f_{i-1,J}+f_{i,J})\\
+		& \quad - (g_{i+1,J}+g_{i+1,J-1}-g_{i-1,J}-g_{i-1,J-1})(f_{i,J}+f_{i,J-1})\\
+		& \quad - (g_{i+1,J}-g_{i,J-1})(f_{i,J}+f_{i+1,J-1})\\
+		& \quad - (g_{i,J-1}-g_{i-1,J})(f_{i-1,J-1}+f_{i,J})].
+	\end{aligned}
 \end{equation}
-The discrete integral constraint $gf$ is $$\sum_{i}[ \frac{1}{2}g_{i,0}J_{i0}+\sum_{j=1}^{J-1} g_{i,j}J_{ij}+\frac{1}{2}g_{i,J}J_{iJ}].$$
+The discrete integral constraint $gf$ is $$\sum_{i}\left[ \frac{1}{2}g_{i,0}J_{i0}+\sum_{j=1}^{J-1} g_{i,j}J_{ij}+\frac{1}{2}g_{i,J}J_{iJ} \right].$$ %TODO: This is not even an equation.
 
-\begin{rmrk}
-For second order Arakawa scheme with g Dirichlet boundary condition, we can take $g_{i,0}=g_{i,-1}$ as a constant. However we can't directly modify fourth order scheme in this way by taking $g_{i,0}=g_{i,-1}=g_{i,-2}$ since the coefficients  $a_{i,0;i,-1}=\frac{1}{8d^2}(g_{i-1,1}-g_{i+1,0})$ and $a_{i,0;i+1,-1}=\frac{-1}{8d^2}(g_{i+1,1}-g_{i-1,0})$ (from $J^{\times \times}$) are not 0, so that we can't use half stencil. If we use half stencil, the coefficients can not be balanced, so we can't keep the conservation. 
-\end{rmrk}
+\textbf{Remark:} For the second order Arakawa scheme with $g$ Dirichlet boundary condition, we can take $g_{i,0}=g_{i,-1}$ as a constant. However we can't directly modify fourth order scheme in this way by taking $g_{i,0}=g_{i,-1}=g_{i,-2}$ since the coefficients  $a_{i,0;i,-1}=\frac{1}{8d^2}(g_{i-1,1}-g_{i+1,0})$ and $a_{i,0;i+1,-1}=\frac{-1}{8d^2}(g_{i+1,1}-g_{i-1,0})$ (from $J^{\times \times}$) are not 0, so that we can't use half stencil. If we use half stencil, the coefficients can not be balanced, so we can't keep the conservation.
 
-\noindent
-If function $f$ is constant at boundary: By $J_{ij}=-J_{ji}$, exchanging the position of f and g, we can get the scheme for the boundary f constant case:
-
-for $j=0$:
-
+If function $f$ is constant at boundary: By $J_{ij}=-J_{ji}$, exchanging the position of f and g, we can get the scheme for the boundary f constant case. For $j=0$:
 \begin{equation}
-\begin{aligned}
-\frac{1}{2}J_{i0} (f,g) &=\frac{1}{12d^2}[(-f_{i,1}-f_{i+1,1}+f_{i,0}+f_{i+1,0})(g_{i+1,0}+g_{i,0})\\
-&-(-f_{i-1,1}-f_{i,1}+f_{i-1,0}+f_{i,0})(g_{i-1,0}+g_{i,0})\\
-&+(f_{i+1,0}+f_{i+1,1}-f_{i-1,0}-f_{i-1,1})(g_{i,0}+g_{i,1})\\
-&+(f_{i+1,0}-f_{i,1})(g_{i,0}+g_{i+1,1})\\
-&+(f_{i,1}-f_{i-1,0})(g_{i-1,1}+g_{i,0})].
-\end{aligned}
+	\begin{aligned}
+		\frac{1}{2}J_{i0} (f,g) & = \frac{1}{12d^2}[(-f_{i,1}-f_{i+1,1}+f_{i,0}+f_{i+1,0})(g_{i+1,0}+g_{i,0})\\
+		&\quad - (-f_{i-1,1}-f_{i,1}+f_{i-1,0}+f_{i,0})(g_{i-1,0}+g_{i,0})\\
+		&\quad + (f_{i+1,0}+f_{i+1,1}-f_{i-1,0}-f_{i-1,1})(g_{i,0}+g_{i,1})\\
+		&\quad + (f_{i+1,0}-f_{i,1})(g_{i,0}+g_{i+1,1})\\
+		&\quad + (f_{i,1}-f_{i-1,0})(g_{i-1,1}+g_{i,0})].
+	\end{aligned}
 \end{equation}
-
-for $j=J$:
-
+and for $j=J$:
 \begin{equation}
-\begin{aligned}
-\frac{1}{2}J_{iJ} (f,g) &=\frac{1}{12d^2}[(f_{i,J-1}+f_{i+1,J-1}-f_{i,J}-f_{i+1,J})(g_{i+1,J}+g_{i,J})\\
-&-(f_{i-1,J-1}+f_{i,J-1}-f_{i-1,J}-f_{i,J})(g_{i-1,J}+g_{i,J})\\
-&-(f_{i+1,J}+f_{i+1,J-1}-f_{i-1,J}-f_{i-1,J-1})(g_{i,J}+g_{i,J-1})\\
-&-(f_{i+1,J}-f_{i,J-1})(g_{i,J}+g_{i+1,J-1})\\
-&-(f_{i,J-1}-f_{i-1,J})(g_{i-1,J-1}+g_{i,J})].
-\end{aligned}
+	\begin{aligned}
+		\frac{1}{2}J_{iJ} (f,g) & = \frac{1}{12d^2}[(f_{i,J-1}+f_{i+1,J-1}-f_{i,J}-f_{i+1,J})(g_{i+1,J}+g_{i,J})\\
+		& \quad - (f_{i-1,J-1}+f_{i,J-1}-f_{i-1,J}-f_{i,J})(g_{i-1,J}+g_{i,J})\\
+		& \quad - (f_{i+1,J}+f_{i+1,J-1}-f_{i-1,J}-f_{i-1,J-1})(g_{i,J}+g_{i,J-1})\\
+		& \quad - (f_{i+1,J}-f_{i,J-1})(g_{i,J}+g_{i+1,J-1})\\
+		& \quad - (f_{i,J-1}-f_{i-1,J})(g_{i-1,J-1}+g_{i,J})].
+	\end{aligned}
 \end{equation}
 
 \textbf{Extrapolation at boundary for the 4th order Arakawa}\\
-It is easy to get 4th order convergence, but how about conservation properties?
+It is easy to get 4th order convergence, but how about conservation properties? %TODO: elaborate or remove
 
 \textbf{Arakawa with homogeneous Dirichlet boundary}\\
 In \cite{crouseilles2018exponential}, they show that the mass of Arakawa scheme for Dirichlet boundary is not conserved up to machine precision, even for homogeneous Dirichlet boundary conditions. By their numerical experiments, the Arakawa scheme works better for homogeneous boundary condition. In their test, they assume that $f(r_{min}, \theta,z,v)=f_{eq}(r_{min},v)$ and $f(r_{max}, \theta,z,v)=f_{eq}(r_{max},v)$ but not homogeneous Dirichlet boundary. In addition to the direct formulation, we can also introduce a so-called perturbation formulation by dividing f into $f=f_{eq}+\delta f(t,r,\theta,v)$. With this formulation, our model problem can be written as 
