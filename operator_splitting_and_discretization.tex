@@ -202,12 +202,18 @@ and for $j=J$:
 	\end{aligned}
 \end{equation}
 
-\textbf{Extrapolation at boundary for the 4th order Arakawa}\\
+
+
+
+
+
+\subsubsection{Extrapolation at boundary for the 4th order Arakawa}
+
 It is easy to get 4th order convergence, but how about conservation properties? %TODO: elaborate or remove
 
-\textbf{Arakawa with homogeneous Dirichlet boundary}\\
-In \cite{crouseilles2018exponential}, they show that the mass of Arakawa scheme for Dirichlet boundary is not conserved up to machine precision, even for homogeneous Dirichlet boundary conditions. By their numerical experiments, the Arakawa scheme works better for homogeneous boundary condition. In their test, they assume that $f(r_{min}, \theta,z,v)=f_{eq}(r_{min},v)$ and $f(r_{max}, \theta,z,v)=f_{eq}(r_{max},v)$ but not homogeneous Dirichlet boundary. In addition to the direct formulation, we can also introduce a so-called perturbation formulation by dividing f into $f=f_{eq}+\delta f(t,r,\theta,v)$. With this formulation, our model problem can be written as 
+\textbf{Arakawa with homogeneous dirichlet boundary:}\\
+In \cite{crouseilles2018exponential}, they show that the mass of Arakawa scheme for dirichlet boundary is not conserved up to machine precision, even for homogeneous Dirichlet boundary conditions. By their numerical experiments, the Arakawa scheme works better for homogeneous boundary condition. In their test, they assume that $f(r_{min}, \theta,z,v)=f_{eq}(r_{min},v)$ and $f(r_{max}, \theta,z,v)=f_{eq}(r_{max},v)$ but not homogeneous Dirichlet boundary. In addition to the direct formulation, we can also introduce a so-called perturbation formulation by dividing f into $f=f_{eq}+\delta f(t,r,\theta,v)$. With this formulation, our model problem can be written as 
 \begin{equation}
  \partial_t \delta f + \{\phi, \delta f \} + v_\parallel \nabla_\parallel \delta f - \nabla_\parallel \phi\,\, \partial_{v_\parallel} \delta f + \{\phi, \delta f_{eq} \}= 0,
 \end{equation} 
-which is similar as our model problem. The Arakawa scheme that is used to discretize $\{\phi, \delta f \}$ now employs homogeneous Dirichlet boundary conditions for $\delta f$ in r-direction.
+which is similar as our model problem. The Arakawa scheme that is used to discretize $\{\phi, \delta f \}$ now employs homogeneous Drichlet boundary conditions for $\delta f$ in r-direction.
