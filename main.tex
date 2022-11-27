@@ -1,8 +1,7 @@
 % !TeX spellcheck = en_GB
 
 \documentclass{article}
-
-%\usepackage[sc]{mathpazo}
+\usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \linespread{1.05}
 \usepackage{microtype}
@@ -16,16 +15,16 @@
 \usepackage{enumerate}
 \usepackage{hyperref}
 \usepackage{physics}
+\usepackage{float} 
+\usepackage{mathtools}
+ 
+\mathtoolsset{showonlyrefs=true}
 
 \theoremstyle{definition}
 \newtheorem{prop}{Proposition}
 \newtheorem{thm}{Theorem}
 
 \usepackage{tikz}
-\usetikzlibrary{cd}
-\tikzcdset{arrow style=tikz
-	, diagrams={>={Stealth[length=1.2mm, width=1mm]}}
-}
 
 \renewcommand{\real}{{\mathbb R}} %% real numbers
 \newcommand{\cO}{\mathcal{O}}
@@ -40,35 +39,40 @@
 \newcommand{\hodge}{\star\hspace{-0.2mm}}
 \newcommand{\one}{\mathbb{1}}
 \newcommand{\bracket}[2]{\left\{ #1, #2 \right\}}
+\newcommand{\gcbracket}[2]{\left\{ #1, #2 \right\}_{\text{g.c.}}}
 \newcommand{\inner}[2]{\left\langle #1, #2 \right\rangle}
 \newcommand{\Alt}{\text{Alt}}
 \newcommand{\vol}{\text{vol}}
 \newcommand{\id}{\text{id}}
 \newcommand{\td}{\;\tilde{\text{d}}}
-\newcommand{\tw}{\tilde{w}}
+\newcommand{\mean}[1]{\langle #1 \rangle}
 
 \newcommand{\bx}{\mathbf{x}}
 \newcommand{\bv}{\mathbf{v}}
+\newcommand{\bu}{\mathbf{u}}
+\newcommand{\be}{\mathbf{e}}
+\newcommand{\bb}{\mathbf{b}}
+\newcommand{\bm}{\mathbf{m}}
+
+\newcommand{\dbx}{\dot{\mathbf{x}}}
+
 \newcommand{\bX}{\mathbf{X}}
 \newcommand{\bV}{\mathbf{V}}
 \newcommand{\bE}{\mathbf{E}}
 \newcommand{\bB}{\mathbf{B}}
 \newcommand{\bA}{\mathbf{A}}
-\newcommand{\be}{\mathbf{e}}
-\newcommand{\bb}{\mathbf{b}}
 \newcommand{\bJ}{\mathbf{J}}
 \newcommand{\bF}{\mathbf{F}}
 \renewcommand{\bf}{\mathbf{f}}
-\newcommand{\bL}{\mathbf{\Lambda}}
 \newcommand{\bM}{\mathbf{M}}
 \newcommand{\bW}{\mathbf{W}}
 \newcommand{\bH}{\mathbf{H}}
-\newcommand{\bm}{\mathbf{m}}
 \newcommand{\bU}{\mathbf{U}}
 \newcommand{\bD}{\mathbf{D}}
 \newcommand{\bI}{\mathbf{I}}
 \newcommand{\bC}{\mathbf{C}}
 \newcommand{\bw}{\mathbf{w}}
+\newcommand{\bL}{\mathbf{\Lambda}}
 
 \newcommand{\cE}{\mathcal{E}}
 \newcommand{\cB}{\mathcal{B}}
@@ -113,14 +117,16 @@
 \newcommand{\fD}{\mathbb{D}}
 \newcommand{\fE}{\mathbb{E}}
 \newcommand{\fB}{\mathbb{B}}
-\newcommand{\fL}{\mathbb{\Lambda}}
 \newcommand{\fF}{\mathbb{F}}
 \newcommand{\fV}{\mathbb{V}}
 \newcommand{\fP}{\mathbb{P}}
 \newcommand{\fJ}{\mathbb{J}}
 \newcommand{\fA}{\mathbb{A}}
 \newcommand{\fH}{\mathbb{H}}
+\newcommand{\fR}{\mathbb{R}}
+
 \newcommand{\fK}{\mathbb{K}}
+\newcommand{\fL}{\mathbb{\Lambda}}
 
 
 \newcommand{\tfG}{\widetilde{\mathbb{G}}}
@@ -133,32 +139,45 @@
 \newcommand{\tdiv}{\text{div}}
 
 \renewcommand{\d}{\;\text{d}}
-\newcommand{\dx}{\;\text{d} \bx}
-\renewcommand{\dv}{\;\text{d} \bv}
 \newcommand{\vth}{v_\text{th}}
 \newcommand{\diag}{\text{diag}}
 \newcommand{\Dt}{\Delta t \;}
 
-
-
+\newcommand{\vp}{v_\parallel}
+\newcommand{\vo}{v_\perp}
+\newcommand{\ap}{a_\parallel}
+\newtheorem{remark}{Remark}
+\newcommand{\Bap}{B_\parallel^\ast}
 
 
 \begin{document}
+	\title{SILAS CEMRACS project}
+	\author{Dominik Bell, Martin Campos Pinto, Davor Kumozec, Frederik Schnack, Eric Sonnendrücker}
+	
+	\maketitle
 
-
-\title{SILAS Cemracs project}
-\author{Dominik Bell, Martin Campos Pinto, Davor Kumozec, Frederik Schnack, Eric Sonnendrücker}
-
-\maketitle
+\begin{abstract}
+In practice, there are various ways to solve gyro-kinetic equations. Here we will combine the Semi-Lagrangian (SL) and Arakawa scheme. Both schemes are successfully implemented in practice when applied individually, but our goal is to decompose the problem into fast (parallel) and slow (perpendicular) dynamics, and to combine these two schemes. The SL scheme will be used to solve the fast subsystem and the Arakawa scheme for the slow subsystem. In \cite{pygyro_code}, what is our reference code, the entire model is solved using SL, and we will replace the part related to the slow subsystem with an Arakawa scheme. The main reason for combining these two schemes is to get a solution that preserves some of the basic measures in the system we have. In Section II we will describe properties of both schemes and splitting between advection equations. In Part III numerical experiments will be presented, first for the Arakawa scheme as verification of theoretical properties and after that for PyGyro model.
+\end{abstract}
 
 \tableofcontents
 
+\input{introduction.tex}
+
+\input{operator_splitting_and_discretization}
+
+\section{Numerical Experiments}
+\label{sec:experiments}
+    \subsection{Pure advection}
+    \subsection{PyGyro}
+    
 \newpage
-\include{introduction}
+\appendix
+\input{proof_arakawa_order}
 
-
-
-
+\newpage
+\bibliographystyle{ieeetr}
+\bibliography{literature}
 
 
 \end{document}
