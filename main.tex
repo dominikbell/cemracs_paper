@@ -53,25 +53,23 @@
 \begin{abstract}
 In practice, there are various ways to solve gyro-kinetic equations. Here, we will combine the Semi-Lagrangian (SL) method and the Arakawa scheme. Both schemes are successfully implemented in practice when applied individually, but our goal is to decompose the problem into fast (parallel) dynamic and slow (perpendicular) dynamic and to combine these two schemes. The SL scheme will be used to solve the fast subsystem and the Arakawa scheme for the slow one. In our reference code \cite{pygyro_code} the entire model is solved using SL; we will replace the part related to the slow subsystem with an Arakawa scheme. The main reason for combining these two schemes is to get a solution that preserves some of the basic measures in the system we have. In Section II we will describe properties of both schemes and splitting between advection equations. In Part III numerical experiments will be presented, first for the Arakawa scheme as a verification of theoretical properties, and after that for the PyGyro model.
 \end{abstract}
-%
-\begin{resume}
-En pratique, il existe plusieurs façons de résoudre les équations gyro-cinétiques. Ici, nous allons combiner la méthode semi-lagrangienne (SL) et le schéma d'Arakawa. Les deux schémas sont mis en œuvre avec succès dans la pratique lorsqu'ils sont appliqués individuellement, mais notre objectif est de décomposer le problème en dynamique rapide (parallèle) et dynamique lente (perpendiculaire) et de combiner ces deux schémas. Le schéma SL sera utilisé pour résoudre le sous-système rapide et le schéma d'Arakawa pour le lent. Dans notre code de référence \cite{pygyro_code}, le modèle entier est résolu en utilisant SL ; nous remplacerons la partie relative au sous-système lent par un schéma d'Arakawa. La raison principale de la combinaison de ces deux schémas est d'obtenir une solution qui préserve certaines des mesures de base du système que nous avons. Dans la partie II, nous décrirons les propriétés des deux schémas et le fractionnement entre les équations d'advection. Dans la partie III, des expériences numériques seront présentées, d'abord pour le schéma d'Arakawa comme vérification des propriétés théoriques, et ensuite pour le modèle PyGyro.
-\end{resume}
+
 
 
 \maketitle
 
 \tableofcontents %TODO: can also be removed later
 
+ \newpage 
 
-\input{introduction.tex}
+\input{sections/introduction.tex}
 
-\input{operator_splitting_and_discretization}
+\input{sections/operator_splitting_and_discretization}
 
-\input{numerical_experiments}
+\input{sections/numerical_experiments}
 
-\appendix
-\input{proof_arakawa_order}
+%\appendix
+%\input{sections/proof_arakawa_order} %Already in the text
 
 
 \begin{acknowledgement}
