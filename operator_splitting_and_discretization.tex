@@ -67,14 +67,15 @@ For the Arakawa scheme, we mainly reference the article \cite{Arakawa_1966}. Her
 where $\{\phi,f\}$ is a Poisson bracket, defined as follows:
 \begin{equation}
  \{\phi,f\}=-\frac{\partial_\theta\phi}{rB_0}\partial_r f + \frac{\partial_r\phi}{rB_0}\partial_\theta f.
+ \label{eq:poisson_bracket}
 \end{equation}
 The Arakawa scheme provably preserves the following quantities: %TODO: add proof (or to reffer to the paper and add just in polar coordinates)?
 	\begin{align*}
-		\text{mass} : && \dt \int f(t) \d x \text{d} y & = 0 & \Leftrightarrow && \int\bracket{\phi}{f} \d x \text{d} y & = 0 \\
-		L^2\text{-norm :} && \dt \int f^2(t) \d x \text{d} y & = 0 & \Leftrightarrow && \int f \, \bracket{\phi}{f} \d x \text{d} y & = 0 \\
+		\text{mass} : && \dt \int f(t) \d x \text{d} y & = 0 & \Leftrightarrow && \int\bracket{\phi}{f} \d x \text{d} y & = 0\\
+		L^2\text{-norm :} && \dt \int f^2(t) \d x \text{d} y & = 0 & \Leftrightarrow && \int f \, \bracket{\phi}{f} \d x \text{d} y & = 0\\
 		\text{total energy :} && \dt \int \phi \, f(t) \d x \text{d} y & = 0 & \Leftrightarrow && \int \phi \bracket{\phi}{f} \d x \text{d} y & = 0
 	\end{align*}
-First we will focus on discretization of Poisson bracket in Cartesian coordinates. The scheme in polar coordinates is analogous.
+First we will focus on discretization of Poisson bracket in Cartesian coordinates. The scheme in polar coordinates will be discussed later.
 
 \subsubsection{Construction of a Discrete Bracket using the Arakawa Method}
 
@@ -184,11 +185,6 @@ and for $j=J$:
 	\end{aligned}
 \end{equation}
 
-
-
-
-
-
 \subsubsection{Extrapolation at boundary for the 4th order Arakawa}
 
 \textbf{Arakawa with homogeneous Dirichlet boundary:}\\
@@ -199,3 +195,14 @@ In \cite{crouseilles2018exponential}, they show that the mass of Arakawa scheme 
 which is similar as our model problem. The Arakawa scheme that is used to discretize $\{\phi, \delta f \}$ now employs homogeneous Dirichlet boundary conditions for $\delta f$ in r-direction.
 
 \subsection{Conservation properties for Arakawa scheme in polar coordinates}
+In polar coordinates, the Arakawa scheme has the same conservation properties. In the paper \cite{Arakawa_1966}, we can find the scheme in curvilinear coordinates. For our purposes, since we want to discretize the Poisson bracket \eqref{eq:poisson_bracket} in the $(r,\theta)$ plane, our desired quantities under the change of coordinates are
+\begin{align*}
+\text{mass} : && \int\bracket{\phi}{f}r \d r \d \theta & = 0\\
+L^2\text{-norm} : && \int f \, \bracket{\phi}{f}r \d r \d \theta & = 0\\
+\text{total energy} : && \int \phi \bracket{\phi}{f}r \d r \d \theta & = 0
+\end{align*}
+Using the fact that in Cartesian coordinates we have know the mass, $L^2$-norm and the total energy satisfies the above properties, if we, without loss of generality, assume that $\Delta\theta=\Delta r$ we have:
+\begin{equation*}
+\int \{{\phi,f}\}r\d r \d \theta=\int\frac{1}{r}(-\partial_\theta\phi\partial_r f+\partial_r\phi\partial_\theta f)r\d r \d=0,
+\end{equation*}
+where the Poisson bracket is discretized as in the Cartesian coordinates. For the other two quantities, the reasoning is analogous.
