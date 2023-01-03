@@ -5,7 +5,7 @@
 
 It is a common tool to split a PDE in several sub-steps in order to do the numerical integration. This simplifies the equation tremendously at the cost of introducing some numerical error. Multiple sub-flows can be recombined to yield an approximation to a time-step of the full PDE; most commonly used methods for this are the \textbf{Strang splitting} which is of first order, and \textbf{Lie splitting} which is a second order method (for more details see \cite{emily}). In the code \cite{pygyro_code} Lie splitting is used for a predictor step and then Strang splitting to compute the full time-step from the predicted distribution function.
 
-We can split our equation 
+We can split our equation
 \begin{equation}
  \partial_t f + \{\phi, f \} + v_\parallel \nabla_\parallel f - \nabla_\parallel \phi\,\, \partial_{v_\parallel} f = 0
 \end{equation}
@@ -22,6 +22,13 @@ where $\{\phi,f\}$ is a Poisson bracket, defined as follows:
  \{\phi,f\}=-\frac{\partial_\theta\phi}{rB_0}\partial_r f + \frac{\partial_r\phi}{rB_0}\partial_\theta f.
 \end{equation}
 In our work, we will use two different approaches to solving these equations. For the first two we will use the semi-Lagrangian scheme and for the third equation we will use the Arakawa scheme. The reason for different approaches in solving these three equations is that most of the physical properties like preservation of the mass, $L_2$ norm and total energy, are happening in the \eqref{eq:adv_poloidal}. For the semi-Lagrangian scheme we know that it is unconditionally stable, but it does not preserve these quantities, so for the equation \eqref{eq:adv_poloidal} we implemented the Arakawa scheme which is known to hold these properties.
+
+
+
+
+
+
+
 
 \subsection{Semi-Lagrangian Scheme for the Fast Time Subsystem}
 
@@ -58,6 +65,12 @@ The v$_\parallel$ surface advection operator defined by equation
 \end{equation}
 and is a one-dimensional semi-Lagrangian operator. Here we use a cubic spline to determine the value of the particle distribution function for characteristics that go outside the domain. The parallel gradient of $\phi$ depends only on the spatial coordinates and is therefore constant along the surface $v_\parallel$. As a result, the trajectory used by the semi-Lagrangian method can be accurately defined. The parallel gradient of $\phi$ is computed using a (field-aligned) finite difference method of order 6 in the $z$ direction. This was calculated as described by Latu et al. \cite{Latu_2017}.
 
+
+
+
+
+
+
 \subsection{Arakawa Scheme for the Slow Time Subsystem}
 
 For the Arakawa scheme, we mainly reference the article \cite{Arakawa_1966}. Here we are interested in solving the advection on poloidal plane:
@@ -69,13 +82,19 @@ where $\{\phi,f\}$ is a Poisson bracket, defined as follows:
  \{\phi,f\}=-\frac{\partial_\theta\phi}{rB_0}\partial_r f + \frac{\partial_r\phi}{rB_0}\partial_\theta f.
  \label{eq:poisson_bracket}
 \end{equation}
-The Arakawa scheme provably preserves the following quantities: %TODO: add proof (or to reffer to the paper and add just in polar coordinates)?
-	\begin{align*}
+The Arakawa scheme provably preserves the following quantities:
+	\begin{align}\label{conservation-properties}
 		\text{mass} : && \dt \int f(t) \d x \text{d} y & = 0 & \Leftrightarrow && \int\bracket{\phi}{f} \d x \text{d} y & = 0\\
 		L^2\text{-norm :} && \dt \int f^2(t) \d x \text{d} y & = 0 & \Leftrightarrow && \int f \, \bracket{\phi}{f} \d x \text{d} y & = 0\\
 		\text{total energy :} && \dt \int \phi \, f(t) \d x \text{d} y & = 0 & \Leftrightarrow && \int \phi \bracket{\phi}{f} \d x \text{d} y & = 0
-	\end{align*}
-First we will focus on discretization of Poisson bracket in Cartesian coordinates. The scheme in polar coordinates will be discussed later.
+	\end{align}
+First we will focus on discretization of Poisson bracket in Cartesian coordinates. The scheme in polar coordinates will be discussed below.
+
+
+
+
+
+
 
 \subsubsection{Construction of a Discrete Bracket using the Arakawa Method}
 
@@ -111,6 +130,12 @@ and
 By Taylor extension, we can see that $2J_1-J_2$ is a fourth order approximation of the Jacobian $J$; that is,
 $2J_1-J_2=J+O(d^4)$.
 Now we have the second-order nine-point scheme and the fourth-order thirteen-point scheme. For the proof of the stencil order, we refer to appendix \ref{sec:ara_order}.
+
+
+
+
+
+
 
 \subsubsection{Boundary Conditions}
 
@@ -160,7 +185,7 @@ Similarly, we obtain the scheme for boundary $j=J$:
 		& \quad - (g_{i,J-1}-g_{i-1,J})(f_{i-1,J-1}+f_{i,J})].
 	\end{aligned}
 \end{equation}
-The discrete integral constraint $gf$ is $$\sum_{i}\left[ \frac{1}{2}g_{i,0}J_{i0}+\sum_{j=1}^{J-1} g_{i,j}J_{ij}+\frac{1}{2}g_{i,J}J_{iJ} \right]=0.$$ %TODO: This is not even an equation. :D I see, I guess it has to be equal to 0 since it is conservative
+The discrete integral constraint $gf$ is $$\sum_{i}\left[ \frac{1}{2}g_{i,0}J_{i0}+\sum_{j=1}^{J-1} g_{i,j}J_{ij}+\frac{1}{2}g_{i,J}J_{iJ} \right]=0.$$
 
 \textbf{Remark:} For the second order Arakawa scheme with $g$ Dirichlet boundary condition, we can take $g_{i,0}=g_{i,-1}$ as a constant. However we can't directly modify fourth order scheme in this way by taking $g_{i,0}=g_{i,-1}=g_{i,-2}$ since the coefficients  $a_{i,0;i,-1}=\frac{1}{8d^2}(g_{i-1,1}-g_{i+1,0})$ and $a_{i,0;i+1,-1}=\frac{-1}{8d^2}(g_{i+1,1}-g_{i-1,0})$ (from $J^{\times \times}$) are not 0, so that we can't use half stencil. If we use half stencil, the coefficients can not be balanced, so we can't keep the conservation.
 
@@ -185,7 +210,12 @@ and for $j=J$:
 	\end{aligned}
 \end{equation}
 
-\subsubsection{Extrapolation at boundary for the 4th order Arakawa}
+
+
+
+
+
+\subsubsection{Extrapolation at the Boundary for the 4th Order Arakawa Scheme}
 
 \textbf{Arakawa with homogeneous Dirichlet boundary:}\\
 In \cite{crouseilles2018exponential}, they show that the mass of Arakawa scheme for Dirichlet boundary is not conserved up to machine precision, even for homogeneous Dirichlet boundary conditions. By their numerical experiments, the Arakawa scheme works better for homogeneous boundary condition. In their test, they assume that $f(r_{min}, \theta,z,v)=f_{eq}(r_{min},v)$ and $f(r_{max}, \theta,z,v)=f_{eq}(r_{max},v)$ but not homogeneous Dirichlet boundary. In addition to the direct formulation, we can also introduce a so-called perturbation formulation by dividing f into $f=f_{eq}+\delta f(t,r,\theta,v)$. With this formulation, our model problem can be written as 
@@ -194,15 +224,25 @@ In \cite{crouseilles2018exponential}, they show that the mass of Arakawa scheme 
 \end{equation} 
 which is similar as our model problem. The Arakawa scheme that is used to discretize $\{\phi, \delta f \}$ now employs homogeneous Dirichlet boundary conditions for $\delta f$ in r-direction.
 
-\subsection{Conservation properties for Arakawa scheme in polar coordinates}
-In polar coordinates, the Arakawa scheme has the same conservation properties. In the paper \cite{Arakawa_1966}, we can find the scheme in curvilinear coordinates. For our purposes, since we want to discretize the Poisson bracket \eqref{eq:poisson_bracket} in the $(r,\theta)$ plane, our desired quantities under the change of coordinates are
+
+
+
+
+
+
+\subsection{Conservation Properties for the Arakawa Scheme in Polar Coordinates}
+
+The paper \cite{Arakawa_1966} contains the Arakawa scheme and the proof of the conservation of the quantities \eqref{conservation-properties}, both in Cartesian coordinates. We want to discretize the Poisson bracket \eqref{eq:poisson_bracket} in curvilinear coordinates, i.e. in the $(r,\theta)$ plane; hence our desired quantities under the change of coordinates are
 \begin{align*}
-\text{mass} : && \int\bracket{\phi}{f}r \d r \d \theta & = 0\\
-L^2\text{-norm} : && \int f \, \bracket{\phi}{f}r \d r \d \theta & = 0\\
+\text{mass} : && \int\bracket{\phi}{f}r \d r \d \theta & = 0 \\
+L^2\text{-norm} : && \int f \, \bracket{\phi}{f}r \d r \d \theta & = 0 \\
 \text{total energy} : && \int \phi \bracket{\phi}{f}r \d r \d \theta & = 0
 \end{align*}
-Using the fact that in Cartesian coordinates we have know the mass, $L^2$-norm and the total energy satisfies the above properties, if we, without loss of generality, assume that $\Delta\theta=\Delta r$ we have:
+
+Using the fact that in Cartesian coordinates we have know the mass, $L^2$-norm, and the total energy satisfies the above properties, if we, without loss of generality, assume that $\Delta\theta=\Delta r$ we have:
 \begin{equation*}
-\int \{{\phi,f}\}r\d r \d \theta=\int\frac{1}{r}(-\partial_\theta\phi\partial_r f+\partial_r\phi\partial_\theta f)r\d r \d=0,
+\int \{{\phi, f}\} r \d r \d \theta = \int \frac{1}{r} \left(-\partial_\theta \phi \partial_r f + \partial_r \phi \partial_\theta f \right) r \d r \d = 0 ,
 \end{equation*}
 where the Poisson bracket is discretized as in the Cartesian coordinates. For the other two quantities, the reasoning is analogous.
+
+
