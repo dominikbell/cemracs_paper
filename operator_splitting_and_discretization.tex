@@ -5,7 +5,8 @@
 
 It is a common tool to split a PDE in several sub-steps in order to do the numerical integration. This simplifies the equation tremendously at the cost of introducing some numerical error. Multiple sub-flows can be recombined to yield an approximation to a time-step of the full PDE; most commonly used methods for this are the \textbf{Strang splitting} which is of first order, and \textbf{Lie splitting} which is a second order method (for more details see \cite{emily}). In the code \cite{pygyro_code} Lie splitting is used for a predictor step and then Strang splitting to compute the full time-step from the predicted distribution function.
 
-We can split our equation
+
+We can split our equation 
 \begin{equation}
  \partial_t f + \{\phi, f \} + v_\parallel \nabla_\parallel f - \nabla_\parallel \phi\,\, \partial_{v_\parallel} f = 0
 \end{equation}
@@ -22,7 +23,6 @@ where $\{\phi,f\}$ is a Poisson bracket, defined as follows:
  \{\phi,f\}=-\frac{\partial_\theta\phi}{rB_0}\partial_r f + \frac{\partial_r\phi}{rB_0}\partial_\theta f.
 \end{equation}
 In our work, we will use two different approaches to solving these equations. For the first two we will use the semi-Lagrangian scheme and for the third equation we will use the Arakawa scheme. The reason for different approaches in solving these three equations is that most of the physical properties like preservation of the mass, $L_2$ norm and total energy, are happening in the \eqref{eq:adv_poloidal}. For the semi-Lagrangian scheme we know that it is unconditionally stable, but it does not preserve these quantities, so for the equation \eqref{eq:adv_poloidal} we implemented the Arakawa scheme which is known to hold these properties.
-
 
 
 
@@ -215,6 +215,8 @@ and for $j=J$:
 
 
 
+
+
 \subsubsection{Extrapolation at the Boundary for the 4th Order Arakawa Scheme}
 
 \textbf{Arakawa with homogeneous Dirichlet boundary:}\\
@@ -223,8 +225,6 @@ In \cite{crouseilles2018exponential}, they show that the mass of Arakawa scheme 
  \partial_t \delta f + \{\phi, \delta f \} + v_\parallel \nabla_\parallel \delta f - \nabla_\parallel \phi\,\, \partial_{v_\parallel} \delta f + \{\phi, \delta f_{eq} \}= 0,
 \end{equation} 
 which is similar as our model problem. The Arakawa scheme that is used to discretize $\{\phi, \delta f \}$ now employs homogeneous Dirichlet boundary conditions for $\delta f$ in r-direction.
-
-
 
 
 
@@ -241,8 +241,18 @@ L^2\text{-norm} : && \int f \, \bracket{\phi}{f}r \d r \d \theta & = 0 \\
 
 Using the fact that in Cartesian coordinates we have know the mass, $L^2$-norm, and the total energy satisfies the above properties, if we, without loss of generality, assume that $\Delta\theta=\Delta r$ we have:
 \begin{equation*}
-\int \{{\phi, f}\} r \d r \d \theta = \int \frac{1}{r} \left(-\partial_\theta \phi \partial_r f + \partial_r \phi \partial_\theta f \right) r \d r \d = 0 ,
+\int \{{\phi, f}\} r \d r \d \theta = \int \frac{1}{r} \left(-\partial_\theta \phi \partial_r f + \partial_r \phi \partial_\theta f \right) r \d r \d \theta = 0 ,
 \end{equation*}
-where the Poisson bracket is discretized as in the Cartesian coordinates. For the other two quantities, the reasoning is analogous.
+
+where the Poisson bracket is discretized as in the Cartesian coordinates. For the other two quantities, the reasoning is analogous:
+\begin{equation*}
+\int f \, \{{\phi, f}\} r \d r \d \theta = \int f \, \frac{1}{r} \left(-\partial_\theta \phi \partial_r f + \partial_r \phi \partial_\theta f \right) r \d r \d \theta= 0
+\end{equation*}
+
+and
+
+\begin{equation*}
+\int \phi \, \{{\phi, f}\} r \d r \d \theta = \int \phi \, \frac{1}{r} \left(-\partial_\theta \phi \partial_r f + \partial_r \phi \partial_\theta f \right) r \d r \d \theta = 0 .
+\end{equation*}
 
 
