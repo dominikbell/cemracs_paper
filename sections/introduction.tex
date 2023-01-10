@@ -1,8 +1,8 @@
 % !TeX spellcheck = en_GB
 
-\section{Introduction}
+
 \label{sec:introduction}
-\subsection{The Gyro-kinetic Model}
+\section{The Gyro-kinetic Model}
 
 In a Tokamak, particles have complicated dynamics in real space which consists of a slow motion along the magnetic field lines superimposed with a fast motion circling around the magnetic field lines. This second, fast motion is called gyration and can be averaged out to reduce the dimension of phase space in order to make the models more computationally feasible while keeping most of the important physics. The resulting theory is called a gyro-kinetic model which will be discussed in the following.\\
 The model is defined by the Lie-transformed, low-frequency particle Lagrangian $L$ (see \cite{Bottino_Sonnendrucker_2015}):
@@ -109,7 +109,6 @@ Boundary conditions on $f$ are
 For the boundary conditions on $\phi$ we take
 \begin{itemize}
     \item Periodic along $\theta$.
-    \item Boundary Conditions along $z$ %TODO...QN equation does not depend on the $z$ so I think we dont need this here or just to say that it is periodic again as in function f
     \item In $r$-direction, $\phi$ is decomposed into Fourier modes. At $r_\text{min}$, we take homogeneous Neumann boundary conditions for the zeroth mode and homogeneous boundary conditions for the others. At $r_\text{max}$, we just take homogeneous Dirichlet boundary conditions.
 \end{itemize}
 

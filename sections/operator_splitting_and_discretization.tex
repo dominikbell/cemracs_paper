@@ -24,7 +24,7 @@ where $\{\phi,f\}$ is a Poisson bracket, defined as follows:
 In our work, we will use two different approaches to solving these equations. For the first two we will use the semi-Lagrangian scheme and for the third equation we will use the Arakawa scheme. The reason for different approaches in solving these three equations is that most of the physical properties like preservation of the mass, $L_2$ norm and total energy, are happening in the \eqref{eq:adv_poloidal}. For the semi-Lagrangian scheme we know that it is unconditionally stable, but it does not preserve these quantities, so for the equation \eqref{eq:adv_poloidal} we implemented the Arakawa scheme which is known to hold these properties.
 
 \subsection{Semi-Lagrangian Scheme for the Fast Time Subsystem}
-
+%TODO: What are the conservation properties of the SL scheme
 The fast time subsystem will be solved using semi-Lagrangian scheme. As reference we will use \cite{campospinto} and \cite{emily}.
 The code for this part can be found at \cite{pygyro_code}. We will use general notations in the beginning and then move on to the specific problem we have in our model. This scheme is frequently used in solving advection problems of the form:
 \begin{equation}

@@ -5,15 +5,31 @@
 
 
 
-\subsection{Pure Advection}
+\subsection{Vortex advection}
 
+In order to verify the Arakawa scheme and it's properties, we look at a vortex advection example, where we perform the poloidal advection based on the potential $\phi$ and density $f$ given by 
+\begin{align}
+	\phi(r, \theta)  = 10 r, \quad f(r, \theta) = f_\text{eq}(r) + \frac14 e^{- ((\theta-\pi)^2 + (r -7)^2)},
+\end{align}  
+on a polar domain with $r \in [0.1, 14.5]$ and $\theta \in [0, 2\pi]$. This results in a banana-shaped Gaussian rotating around the center of the disk. Since the value of the potential is directly proportional to the radius, the advection is stronger the closer the values are to the center. Thus, resulting in a spiral as seen in \ref{fig:vortex}.
 
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.45\linewidth]{plots/vortex_init.png}
+	\includegraphics[width=0.45\linewidth]{plots/vortex_final.png}
+	\caption{The density $f$ at initial (left) and final (right) time.}
+	\label{fig:vortex}
+\end{figure}
 
-
-
-
-
-
+In order to solve this test-problem, we use the Arakawa scheme of order $4$, with an extrapolation of the equilibrium function as a boundary condition, as a space discretization, for which we divide the angular domain in $N_\theta = 60$ and radial domain in $N_r = 40$ cells. The time integration is done by an explicit Runge-Kutta scheme of order $4$, where we perform $N = 200$ time-steps with a step-size of $\Delta t = 0.1$.
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.45\linewidth]{plots/vortex_cons.png}
+	\includegraphics[width=0.45\linewidth]{plots/vortex_conv.png}
+	\caption{Conservation of mass, $l^2$-norm and energy by the Arakawa scheme (left) and its order of convergence (right).}
+	\label{fig:vortex_con}
+\end{figure}
+While solving, we keep track of the $l^1$-norm, or mass in other words, $l^2$-norm and the potential energy. As shown in \ref{fig:vortex_con}, these properties are preserved by the discrete solution as we have shown in [CITE PROOF]. Furthermore, we compare the relative error of our method on subsequently refined meshes in order to compute the order of convergence as shown in \ref{fig:vortex_con}. 
 \subsection{PyGyro}
 
 Our main point of comparing the Arakawa method to the Semi-Lagrangian scheme are the conserved quantities: the mass
@@ -41,6 +57,7 @@ The kinetic energy is also much better preserved.
 
 The same study with time-step size $\Delta t = 2$ was done (figures \ref{fig:abserr_dt2}, \ref{fig:relerr_dt2}, \ref{fig:relerrlog_dt2}) and yields the same results. It is therefore interesting to compare the results of the poloidal advection step for the Arakawa method for the two time step-sizes; these results are shown in figures \ref{fig:abserr_akw}, \ref{fig:relerr_akw}, \ref{fig:relerrlog_akw}. We see that the doubling of the time step-size results in double the absolute error for the conserved quantities, and about a factor of 5 for the kinetic energy.
 
+%TODO: Only log scale probably
 \begin{figure}
 	\centering
 	\includegraphics[width=0.9\linewidth]{plots/abs_err}
