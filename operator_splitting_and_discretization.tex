@@ -78,9 +78,8 @@ For the Arakawa scheme, we mainly reference the article \cite{Arakawa_1966}. Her
  \partial_t f + \{\phi, f\} = 0
 \end{equation}
 where $\{\phi,f\}$ is a Poisson bracket, defined as follows:
-\begin{equation}
- \{\phi,f\}=-\frac{\partial_\theta\phi}{rB_0}\partial_r f + \frac{\partial_r\phi}{rB_0}\partial_\theta f.
- \label{eq:poisson_bracket}
+\begin{equation}\label{eq:poisson_bracket}
+	 \{\phi,f\} = - \frac{1}{rB_0} \left(\partial_\theta\phi\right) \left(\partial_r f\right) + \frac{1}{rB_0} \left(\partial_r\phi\right) \left(\partial_\theta f\right) \, .
 \end{equation}
 The Arakawa scheme provably preserves the following quantities:
 	\begin{align}\label{conservation-properties}
@@ -118,14 +117,20 @@ We denote the linear combination $J_1=\frac{1}{3}(J^{++}+J^{+\times}+J^{\times+}
 In order to extend the discretization to 4th order we introduce $J_2=\frac{1}{3}(J^{\times \times} + J^{\times+} + J^{+\times})$ where we use the same nine point stencil with the additional
 four points $(i+2,j)$, $(i-2,j)$, $(i,j+2)$  and $(i,j-2)$ for $J_2$, where
 \begin{equation}
-    J^{\times\times}_{ij}=\frac{1}{8d^2}[(f_{i+1,j+1}-f_{i-1,j-1})(g_{i-1,j+1}-g_{i+1,j-1})-(f_{i-1,j+1}-f_{i+1,j-1})(g_{i+1,j+1}-g_{i-1,j-1})], 
+	J^{\times\times}_{ij} = \frac{1}{8d^2} \left[(f_{i+1,j+1} - f_{i-1,j-1}) (g_{i-1,j+1} - g_{i+1,j-1}) - (f_{i-1,j+1} - f_{i+1,j-1}) (g_{i+1,j+1} - g_{i-1,j-1}) \right] \, ,
 \end{equation}
 \begin{equation}
-    J^{\times+}_{ij}=\frac{1}{8d^2}[f_{i+1,j+1}(g_{i,j+2}-g_{i+2,j})-f_{i-1,j-1}(g_{i-2,j}-g_{i,j-2})-f_{i-1,j+1}(g_{i,j+2}-g_{i-2,j})+f_{i+1,j-1}(g_{i+2,j}-g_{i,j-2})],
+	\begin{aligned}
+		J^{\times+}_{ij} & = \frac{1}{8d^2} \left[ f_{i+1,j+1} (g_{i,j+2} - g_{i+2,j}) - f_{i-1,j-1} (g_{i-2,j} - g_{i,j-2}) \right. \\
+		& \hspace{11mm} \left. - f_{i-1,j+1} (g_{i,j+2} - g_{i-2,j}) + f_{i+1,j-1} (g_{i+2,j} - g_{i,j-2})\right] \, ,
+	\end{aligned}
 \end{equation}
 and
 \begin{equation}
-    J^{+\times}_{ij}=\frac{1}{8d^2}[f_{i+2,j}(g_{i+1,j+1}-g_{i+1,j-1})-f_{i-2,j}(g_{i-1,j+1}-g_{i-1,j-1})-f_{i,j+2}(g_{i+1,j+1}-g_{i-1,j+1})+f_{i,j-2}(g_{i+1,j-1}-g_{i-1,j-1})].
+	\begin{aligned}
+		J^{+\times}_{ij} & = \frac{1}{8d^2} \left[f_{i+2,j} (g_{i+1,j+1} - g_{i+1,j-1}) - f_{i-2,j} (g_{i-1,j+1} - g_{i-1,j-1}) \right. \\
+		& \hspace{11mm} \left. - f_{i,j+2} (g_{i+1,j+1} - g_{i-1,j+1}) + f_{i,j-2} (g_{i+1,j-1} - g_{i-1,j-1})\right] \, .
+	\end{aligned}
 \end{equation}
 By Taylor extension, we can see that $2J_1-J_2$ is a fourth order approximation of the Jacobian $J$; that is,
 $2J_1-J_2=J+O(d^4)$.
@@ -232,27 +237,34 @@ which is similar as our model problem. The Arakawa scheme that is used to discre
 
 \subsection{Conservation Properties for the Arakawa Scheme in Polar Coordinates}
 
-The paper \cite{Arakawa_1966} contains the Arakawa scheme and the proof of the conservation of the quantities \eqref{conservation-properties}, both in Cartesian coordinates. We want to discretize the Poisson bracket \eqref{eq:poisson_bracket} in curvilinear coordinates, i.e. in the $(r,\theta)$ plane; hence our desired quantities under the change of coordinates are
-\begin{align*}
-\text{mass} : && \int\bracket{\phi}{f}r \d r \d \theta & = 0 \\
-L^2\text{-norm} : && \int f \, \bracket{\phi}{f}r \d r \d \theta & = 0 \\
-\text{total energy} : && \int \phi \bracket{\phi}{f}r \d r \d \theta & = 0
-\end{align*}
+The original Arakawa scheme \cite{Arakawa_1966} was formulated in Cartesian coordinates and the proof for the conservation was also done in Cartesian coordinates. We now show that the conservation for the quantities \eqref{conservation-properties} also holds in polar coordinates as well. Dropping factors of $\frac{1}{B_0}$ in the following, we have for the time evolution of the mass
+\begin{subequations}
+	\begin{align}
+		\dt \int f(t) \d x \d y & = \int\bracket{\phi}{f}r \d r \d \theta \\
+		& = \int \left[- \frac{1}{r} \left(\partial_\theta\phi\right) \left(\partial_r f\right) + \frac{1}{r} \left(\partial_r\phi\right) \left(\partial_\theta f\right)\right] r \d r \d \theta \\
+		& = \int \left[- \left(\partial_\theta\phi\right) \left(\partial_r f\right) + \left(\partial_r\phi\right) \left(\partial_\theta f\right)\right] \d r \d \theta \\
+		& = \overline{J(\phi,f)} = 0
+	\end{align}
+\end{subequations}
+which is zero since it is now the identical expression as in the Cartesian coordinates for which the conservation (equation (5) in \cite{Arakawa_1966}) was proven with the above discretization of the bracket.
 
-Using the fact that in Cartesian coordinates we have know the mass, $L^2$-norm, and the total energy satisfies the above properties, if we, without loss of generality, assume that $\Delta\theta=\Delta r$ we have:
-\begin{equation*}
-\int \{{\phi, f}\} r \d r \d \theta = \int \frac{1}{r} \left(-\partial_\theta \phi \partial_r f + \partial_r \phi \partial_\theta f \right) r \d r \d \theta = 0 ,
-\end{equation*}
-
-where the Poisson bracket is discretized as in the Cartesian coordinates. For the other two quantities, the reasoning is analogous:
-\begin{equation*}
-\int f \, \{{\phi, f}\} r \d r \d \theta = \int f \, \frac{1}{r} \left(-\partial_\theta \phi \partial_r f + \partial_r \phi \partial_\theta f \right) r \d r \d \theta= 0
-\end{equation*}
-
-and
-
-\begin{equation*}
-\int \phi \, \{{\phi, f}\} r \d r \d \theta = \int \phi \, \frac{1}{r} \left(-\partial_\theta \phi \partial_r f + \partial_r \phi \partial_\theta f \right) r \d r \d \theta = 0 .
-\end{equation*}
-
+Similarly it is argued that the the $L^2$-norm of the distribution function is conserved
+\begin{subequations}
+	\begin{align}
+		\dt \int f^2(t) \d x \d y & = \int f \bracket{\phi}{f}r \d r \d \theta \\
+		& = \int f \left[- \frac{1}{r} \left(\partial_\theta\phi\right) \left(\partial_r f\right) + \frac{1}{r} \left(\partial_r\phi\right) \left(\partial_\theta f\right)\right] r \d r \d \theta \\
+		& = \int f \left[- \left(\partial_\theta\phi\right) \left(\partial_r f\right) + \left(\partial_r\phi\right) \left(\partial_\theta f\right)\right] \d r \d \theta \\
+		& = \overline{f \, J(\phi,f)} = 0
+	\end{align}
+\end{subequations}
+and the potential energy during the poloidal advection step where $\phi$ is constant
+\begin{subequations}
+	\begin{align}
+		\dt \int \phi \, f(t) \d x \d y & = \int \phi \bracket{\phi}{f}r \d r \d \theta \\
+		& = \int \phi \left[- \frac{1}{r} \left(\partial_\theta\phi\right) \left(\partial_r f\right) + \frac{1}{r} \left(\partial_r\phi\right) \left(\partial_\theta f\right)\right] r \d r \d \theta \\
+		& = \int \phi \left[- \left(\partial_\theta\phi\right) \left(\partial_r f\right) + \left(\partial_r\phi\right) \left(\partial_\theta f\right)\right] \d r \d \theta \\
+		& = \overline{\phi \, J(\phi,f)} = 0
+	\end{align}
+\end{subequations}
+which rely on the properties of equations (6) and (7), respectively, of \cite{Arakawa_1966}.
 
