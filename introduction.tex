@@ -4,17 +4,20 @@
 \label{sec:introduction}
 \subsection{The Gyro-kinetic Model}
 
-In a Tokamak, particles have complicated dynamics in real space which consists of a slow motion along the magnetic field lines superimposed with a fast motion circling around the magnetic field lines. This second, fast motion is called gyration and can be averaged out to reduce the dimension of phase space in order to make the models more computationally feasible while keeping most of the important physics. The resulting theory is called a gyro-kinetic model which will be discussed in the following.\\
+In a Tokamak, particles have complicated dynamics in real space which consists of a slow motion along the magnetic field lines superimposed with a fast motion circling around the magnetic field lines. This second, fast motion is called gyration and can be averaged out to reduce the dimension of phase space in order to make the models more computationally feasible while keeping most of the important physics. The resulting theory is called a gyro-kinetic model which will be discussed in the following.
+
 The model is defined by the Lie-transformed, low-frequency particle Lagrangian $L$ (see \cite{Bottino_Sonnendrucker_2015}):
 \begin{equation}\label{Lagrangian}
 	L = \left(e\bA + m \vp \bb \right)\cdot\dbx + \frac{m\sqrt{4\pi}}{e \mu_0^{\frac{3}{2}}} \mu \dot{\theta} - H(\bx, \vp)
 \end{equation}
-with the variables $\bx \in \Omega \subseteq \bR^3$, the position of the gyro-centre, $\vp \in \bR^3$, the velocity parallel to the magnetic field lines, and $\mu$, the modified magnetic moment. $\bA$ will denote the background vector potential. The Hamiltonian $H$ will be discussed below.\\
+with the variables $\bx \in \Omega \subseteq \bR^3$, the position of the gyro-centre, $\vp \in \bR^3$, the velocity parallel to the magnetic field lines, and $\mu$, the modified magnetic moment. $\bA$ will denote the background vector potential. The Hamiltonian $H$ will be discussed below.
+
 From the equation of motion for $\theta$ it can be seen immediately that $\mu$ is a constant of the system:
 \begin{equation}
 	\diff{}{t} \mu = 0
 \end{equation}
-and phase space is thus 4-dimensional.\\
+and phase space is thus 4-dimensional.
+
 A kinetic equation for this model is the gyro-kinetic equation for the gyro-centre distribution function $f=f(t,\bx, \vp, \mu)$:
 \begin{equation}\label{drift-kinetic model}
 	\pa{f}{t} + \bu \cdot \nabla f + \ap \pa{f}{\vp} = 0.
@@ -61,7 +64,8 @@ Splitting between fast and slow steps yields:
 		\end{aligned} \right. \label{split step slow}
 	\end{align}
 \end{subequations}
-Both fast and slow steps are divergence-free and derived from a Poisson bracket.\\
+Both fast and slow steps are divergence-free and derived from a Poisson bracket.
+
 The guiding-centre Poisson bracket reads:
 \begin{subequations}
 	\begin{align}
@@ -113,19 +117,22 @@ For the boundary conditions on $\phi$ we take
     \item In $r$-direction, $\phi$ is decomposed into Fourier modes. At $r_\text{min}$, we take homogeneous Neumann boundary conditions for the zeroth mode and homogeneous boundary conditions for the others. At $r_\text{max}$, we just take homogeneous Dirichlet boundary conditions.
 \end{itemize}
 
-\textbf{Conserved Quantities}\\
-Firstly, we have a transport equation in conservative form \eqref{conservation1}. Secondly, \eqref{drift-kinetic model} conserves arbitrary functions of $f$  along nonlinear characteristics,
+
+
+
+\subsubsection{Conserved Quantities}
+Firstly, we have a transport equation in conservative form \eqref{conservation1}. Secondly, \eqref{drift-kinetic model} conserves arbitrary functions of $f$  along non-linear characteristics,
 \begin{equation}
 \dt C(f) + \bracket{C(f)}{H} =0,
 \end{equation}
 and the Casimir invariant $\int C( f ) d^5R$ is also conserved. Therefore, in addition to the particle number or the $L^1$-norm $\int f d^5R$, the system has an infinite number of conserved quantities such as the $L^2$-norm $\int f^2 d^5R$, and the kinetic entropy $S=\int f \ln(f) d^5R$.\\
-Thirdly, the gyrokinetic equations conserve the total energy $H = E_k + E_f$:
+Thirdly, the gyro-kinetic equations conserve the total energy $H = E_k + E_f$:
 \begin{subequations}
 	\begin{align}
 		E_k &= \frac{1}{2} m \vp^2 + \mu B(\bx),\\
 		E_f &= q \mean{\phi}_\alpha (t,\bx).
 	\end{align}
 \end{subequations}
-where $E_k$ is the kinetic energy and $E_f$ is the field energy. For more details on this, we refer the reader to \cite{idomura2008conservative}.\\
+where $E_k$ is the kinetic energy and $E_f$ is the field energy. For more details on this, we refer the reader to \cite{idomura2008conservative}.
 
 In the next chapter we will explain the numerical scheme used to obtain the approximate solution of the GK model. Our goal is combine the Semi-Lagrangian (SL) and Arakawa scheme (AK). SL scheme will be used to solve fast subsystem and AK for slow. The main reason for combining these two schemes is to get a solution that preserves some of the basic measures in the system we have.
