@@ -5,13 +5,13 @@
 
 
 
-\subsection{Vortex advection}
+\subsection{Vortex Advection}
 
 In order to verify the Arakawa scheme and it's properties, we look at a vortex advection example, where we perform the poloidal advection based on the potential $\phi$ and density $f$ given by 
 \begin{align}
 	\phi(r, \theta)  = 10 r, \quad f(r, \theta) = f_\text{eq}(r) + \frac14 e^{- ((\theta-\pi)^2 + (r -7)^2)},
 \end{align}  
-on a polar domain with $r \in [0.1, 14.5]$ and $\theta \in [0, 2\pi]$. This results in a banana-shaped Gaussian rotating around the center of the disk. Since the value of the potential is directly proportional to the radius, the advection is stronger the closer the values are to the center. Thus, resulting in a spiral as seen in \ref{fig:vortex}.
+on a polar domain with $r \in [0.1, 14.5]$ and $\theta \in [0, 2\pi]$. This results in a banana-shaped Gaussian rotating around the centre of the disk. Since the value of the potential is directly proportional to the radius, the advection is stronger the closer the values are to the centre. Thus, resulting in a spiral as seen in \ref{fig:vortex}.
 
 \begin{figure}[h]
 	\centering
@@ -29,7 +29,12 @@ In order to solve this test-problem, we use the Arakawa scheme of order $4$, wit
 	\caption{Conservation of mass, $l^2$-norm and energy by the Arakawa scheme (left) and its order of convergence (right).}
 	\label{fig:vortex_con}
 \end{figure}
-While solving, we keep track of the $l^1$-norm, or mass in other words, $l^2$-norm and the potential energy. As shown in \ref{fig:vortex_con}, these properties are preserved by the discrete solution as we have shown in [CITE PROOF]. Furthermore, we compare the relative error of our method on subsequently refined meshes in order to compute the order of convergence as shown in \ref{fig:vortex_con}. 
+While solving, we keep track of the $l^1$-norm, or mass in other words, $l^2$-norm and the potential energy. As shown in \ref{fig:vortex_con}, these properties are preserved by the discrete solution as we have shown in section \ref{sec:consv-props}. Furthermore, we compare the relative error of our method on subsequently refined meshes in order to compute the order of convergence as shown in \ref{fig:vortex_con}.
+
+
+
+
+
 \subsection{PyGyro}
 
 Our main point of comparing the Arakawa method to the Semi-Lagrangian scheme are the conserved quantities: the mass
