@@ -36,26 +36,27 @@
 
 \title{SILAS - Semi-Lagrangian scheme with Arakawa splitting}
 \thanks{CEMRACS}\thanks{Max-Planck}% At most 5 thanks
-%
+
 \author{Dominik Bell}\address{Max-Planck-Institut für Plasmaphysik, Garching, Germany; \email{dominik.bell@ipp.mpg.de\ \&\ frederik.schnack@ipp.mpg.de\ \&\ martin.campos-pinto@ipp.mpg.de\ \&\ sonnen@ipp.mpg.de}}\secondaddress{Technische Universität München, Zentrum Mathematik, Garching, Germany}
 \author{Martin Campos Pinto}\sameaddress{1}
 \author{Davor Kumozec}\address{Faculty of Sciences, University of Novi Sad, Serbia; \email{davor.kumozec@dmi.uns.ac.rs}}
 \author{Frederik Schnack}\sameaddress{1}
 \author{Eric Sonnendrücker}\sameaddress{1,2}
 
+
 \begin{abstract}
-In practice, there are various ways to solve gyro-kinetic equations. Here, we will combine the Semi-Lagrangian (SL) method and the Arakawa scheme. Both schemes are successfully implemented in practice when applied individually, but our goal is to decompose the problem into fast (parallel) dynamic and slow (perpendicular) dynamic and to combine these two schemes. The SL scheme will be used to solve the fast subsystem and the Arakawa scheme for the slow one. In our reference code \cite{pygyro_code} the entire model is solved using SL; we will replace the part related to the slow subsystem with an Arakawa scheme. The main reason for combining these two schemes is to get a solution that preserves some of the basic measures in the system we have. In Section II we will describe properties of both schemes and splitting between advection equations. In Part III numerical experiments will be presented, first for the Arakawa scheme as a verification of theoretical properties, and after that for the PyGyro model.
+In practice, there are various ways to solve gyro-kinetic equations. Here, we will combine the Semi-Lagrangian (SL) method and the Arakawa (AKW) scheme combined with a time-integrator. Both methods are successfully used in practice when applied individually, in our case, we combine them by first decomposing the problem into a fast (parallel) and a slow (perpendicular) dynamical system. The SL approach will be used to solve the fast and the AKW scheme for the slow subsystem. So far in our reference code \cite{pygyro_code}, the entire model is solved only using the SL method. Our goal is to replace the discretization of the slow subsystem by the AKW scheme, in order to improve preservation of conserved quantities of the physical system at hand. \\
+After an introduction of the gyro-kinetic equations in Section \ref{sec:introduction}, we will describe this splitting ansatz in combination with the two schemes in Section \ref{sec:splitting_discretization}. Lastly in Section \ref{sec:num_exp}, numerical experiments will be presented, first as a verification of the AKW scheme, and after that the application to the full PyGyro model. Concluding with Section \ref{sec:conclusion}, we discuss the benefits of this approach. 
 \end{abstract}
 
-\begin{resume}
-	En pratique, il existe plusieurs façons de résoudre les équations gyro-cinétiques. Ici, nous allons combiner la méthode Semi-Lagrangienne (SL) et le schéma d'Arakawa. Les deux schémas sont mis en œuvre avec succès dans la pratique lorsqu'ils sont appliqués individuellement, mais notre objectif est de décomposer le problème en dynamique rapide (parallèle) et dynamique lente (perpendiculaire) et de combiner ces deux schémas. Le schéma SL sera utilisé pour résoudre le sous-système rapide et le schéma d'Arakawa pour le lent. Dans notre code de référence \cite{pygyro_code}, le modèle entier est résolu en utilisant la méthode SL; nous remplacerons la partie relative au sous-système lent par un schéma d'Arakawa. La raison principale de la combinaison de ces deux schémas est d'obtenir une solution qui préserve des mesures de base du système que nous avons. Dans la partie II, nous décrirons les propriétés des deux schémas et le fractionnement entre les équations d'advection. Dans la partie III, des expériences numériques seront présentées, d'abord pour le schéma d'Arakawa comme vérification des propriétés théoriques, et ensuite pour le modèle PyGyro.
+\begin{resume}%TODO: verify french
+	En pratique, il existe plusieurs façons de résoudre les équations gyro-cinétiques. Ici, nous combinerons la méthode semi-lagrangienne (SL) et le schéma d'Arakawa (AKW) combiné à un intégrateur temporel. Les deux méthodes sont utilisées avec succès dans la pratique lorsqu'elles sont appliquées individuellement. Dans notre cas, nous les combinons en décomposant d'abord le problème en un système dynamique rapide (parallèle) et un système dynamique lent (perpendiculaire). L'approche SL sera utilisée pour résoudre le système rapide et le schéma AKW pour le sous-système lent. Jusqu'à présent, dans notre code de référence \cite{pygyro_code}, le modèle entier est résolu en utilisant uniquement la méthode SL. Notre objectif est de remplacer la discrétisation du sous-système lent par le schéma AKW, afin d'améliorer la préservation des quantités conservées du système physique en question. \\
+	Après une introduction des équations gyro-cinétiques dans la Section \ref{sec:introduction}, nous décrirons cet ansatz de fractionnement en combinaison avec les deux schémas dans la Section \ref{sec:splitting_discretization}. Enfin, dans la section \ref{sec:num_exp}, des expériences numériques seront présentées, d'abord pour vérifier le schéma AKW, puis pour l'appliquer au modèle PyGyro complet. Dans la section \ref{sec:conclusion}, nous discutons des avantages de cette approche. 
 \end{resume}
 
 \maketitle
-
 \newpage
-
-%\tableofcontents %TODO: can also be removed later
+\tableofcontents %TODO: can also be removed later
 
 \input{sections/introduction.tex}
 
