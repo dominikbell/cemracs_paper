@@ -37,7 +37,23 @@ While solving, we keep track of the $l^1$-norm, or mass in other words, $l^2$-no
 
 \subsection{PyGyro}
 
-In the following we will look at results from simulations of the whole problem, and then compare the Arakawa method to the Semi-Lagrangian scheme. Looking at the $L^2$-norm of the electric potential $\phi$ (figure \ref{fig:l2phi}), we observe the expected behaviour where it follows the analytical growth rate of $\norm{\phi}_2 = 4\cdot 10^{-5} \times \exp\left(0.00354 t\right)$ in the linear regime (until $t \sim 3000$) very well (shown on the left in a semi-logarithmic plot). After that the $L^2$-norm saturates and settles at a value of around $8.0$ .
+In the following we will look at results from simulations of the whole problem, and then compare the Arakawa method to the Semi-Lagrangian scheme.  The parameters used are the same as those in \cite{Latu_2017}, namely:
+\begin{align*}
+	& B_0=1, && R_0 = 239.8081535, &&& r_{\min}=0.1, &&&& r_{\max}=14.5,\\
+	& r_p = \frac{r_{\min}+r_{\max}}{2}, && \epsilon = 10^{-6}, &&& \kappa_{n_0}=0.055, &&&& \kappa_{T_i}=\kappa_{T_e}=0.27586,\\
+	& \delta_{r_{T_i}}=\delta_{r_{T_e}}=\frac{\delta_{r_{n_0}}}{2} = 1.45, && \delta_r = \frac{4\delta_{r_{n_0}}}{\delta_{r_{T_i}}}, &&& v_{\max}=7.32 
+\end{align*}
+The grid size is as follows:
+\begin{align*}
+	& N_r = 128 && N_\theta = 256 &&& N_z = 128 &&&& N_{v_\parallel} = 72
+\end{align*}
+The simulation also uses the following parameters:
+\begin{align*}
+	&\iota=0 && m=5 &&& n=1
+\end{align*}
+The equilibrium function as well as the radial profiles \{$T_i$ , $T_e$ , $n_0$ \} are defined in \cite{Latu_2017}.
+
+Looking at the $L^2$-norm of the electric potential $\phi$ (figure \ref{fig:l2phi}), we observe the expected behaviour where it follows the analytical growth rate of $\norm{\phi}_2 = 4\cdot 10^{-5} \times \exp\left(0.00354 t\right)$ in the linear regime (until $t \sim 3000$) very well (shown on the left in a semi-logarithmic plot). After that the $L^2$-norm saturates and settles at a value of around $8.0$ .
 
 \begin{figure}
 	\centering
@@ -47,9 +63,22 @@ In the following we will look at results from simulations of the whole problem, 
 \end{figure}
 
 
-Furthermore, we plot the both the full distribution function (figure ) and its difference to the equilibrium distribution function (figure ) up to $t=5000$ in steps of 1000. We see that it behaves as expected with turbulences forming after
+Furthermore, we plot the both the full distribution function (figure \ref{fig:akwffull}) and its difference to the equilibrium distribution function (figure \ref{fig:akwfdiff}) up to $t=5000$ in steps of 1000. Shown are slices at $z=0$ and $v_\parallel = 0$ in a polar projection with variables $r$ and $\theta$. We see that it behaves as expected with turbulences forming after the linear regime is over, appearing in the plot for $t=4000$.
 
-%figures
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{plots/akw_f_full}
+	\caption{The distribution function for different points in time. Shown are $(r,\theta)$-slices at $(z,v_\parallel) = (0,0)$.}
+	\label{fig:akwffull}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{plots/akw_f_diff}
+	\caption{The difference between the distribution function and the equilibrium distribution function for different points in time. Shown are $(r,\theta)$-slices at $(z,v_\parallel) = (0,0)$.}
+	\label{fig:akwfdiff}
+\end{figure}
+
 
 
 Our main point of comparing the Arakawa method to the Semi-Lagrangian scheme are the conserved quantities: the mass
@@ -69,7 +98,7 @@ of the distribution function, and the potential energy
 	\int \left(f(r, \theta, z, v_\parallel) - f_\text{eq}(r, v_\parallel)\right) v^2_\parallel \d r \d \theta \d z \d v_\parallel
 \end{equation}
 
-From a simulation with grid size $[r:128, \theta:256, z:128, v_\parallel :72]$ and time step-size $\Delta t = 1$ we plot for the above mentioned 4 quantities the absolute error (figure \ref{fig:abserrlog}) and the relative error (figure \ref{fig:relerrlog}) before and after the poloidal advection step.
+From a simulation with the above grid size and time step-size $\Delta t = 1$ we plot for the above mentioned 4 quantities the absolute error (figure \ref{fig:abserrlog}) and the relative error (figure \ref{fig:relerrlog}) before and after the poloidal advection step.
 
 We can clearly see that the Arakawa scheme preserves the conserved quantities much better than semi-Lagrangian scheme. In the linear phase, the error is of order of machine precision. Only very late in the non-linear phase becomes the relative error bigger, but is still one or two orders of magnitude smaller than in the semi-Lagrangian scheme.
 
