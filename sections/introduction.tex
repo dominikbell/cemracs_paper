@@ -4,127 +4,123 @@
 \section{The Gyro-kinetic Model}
 \label{sec:introduction}
 
-In a Tokamak, particles have complicated dynamics in real space which consists of a slow motion along the magnetic field lines superimposed with a fast motion circling around the magnetic field lines. This second, fast motion is called gyration and can be averaged out to reduce the dimension of phase space in order to make the models more computationally feasible while keeping most of the important physics. The resulting theory is called a gyro-kinetic model which will be discussed in the following.
+In a Tokamak, particles have complicated dynamics in real space which consists of a slow motion along the magnetic field lines superimposed with a fast motion circling around the magnetic field lines. This fast motion is called gyration and can be averaged out to reduce the dimension of phase space in order to make the models computationally more feasible, while keeping most of the important physics. The resulting theory is called a gyro-kinetic model which will be discussed in the following.\\
 
-The model is defined by the Lie-transformed, low-frequency particle Lagrangian $L$ (see \cite{Bottino_Sonnendrucker_2015}):
+The model is defined by the Lie-transformed, low-frequency particle Lagrangian $L$, where we follow the derivation in \cite{Bottino_Sonnendrucker_2015}, \cite{emily} and \cite{Latu_2017}. Given a static magnetic field $\bB$, its intensity $B = \norm{\bB}$ and its direction $\bb = \bB / B$, the particle charge $q \not= 0$ and the particle mass $m >0$,  
+%and denoting $\bA$ as the vector-valued background potential
+we are able to write the Lagrangian $L$ as
 \begin{equation}\label{Lagrangian}
-	L = \left(e\bA + m \vp \bb \right)\cdot\dbx + \frac{m\sqrt{4\pi}}{e \mu_0^{\frac{3}{2}}} \mu \dot{\theta} - H(\bx, \vp)
+	L(t, \bx, \vp, \mu) = \left(\nabla \times q\bB + m \vp \bb \right)\cdot\dbx + \frac{m}{q} \mu \dot{\theta} - H(\bx, \vp),
 \end{equation}
-with the variables $\bx \in \Omega \subseteq \bR^3$, the position of the gyro-centre, $\vp \in \bR^3$, the velocity parallel to the magnetic field lines, and $\mu$, the modified magnetic moment. $\bA$ will denote the background vector potential. The Hamiltonian $H$ will be discussed below.
-
-From the equation of motion for $\theta$ it can be seen immediately that $\mu$ is a constant of the system:
+where $\bx \in \Omega \subseteq \bR^3$ is the position of the gyro-centre, $\vp \in \bR$ is the velocity parallel to the magnetic field lines and $\mu$ is the modified magnetic moment. The Hamiltonian $H$ will be introduced shortly.
+Looking at the equation of motion of $\theta$, i.e. its Euler-Lagrange equations, we immediately can conclude that $\mu$ is an exact invariant of the system, i.e.
 \begin{equation}
-	\diff{}{t} \mu = 0
+	\diff{}{t} \mu = 0,
 \end{equation}
-and phase space is thus 4-dimensional.
-
-A kinetic equation for this model is the gyro-kinetic equation for the gyro-centre distribution function $f=f(t,\bx, \vp, \mu)$:
+and thus the phase-space is only $4$-dimensional.
+The gyro-kinetic equation describing the gyro-centre distribution function $f=f(t,\bx, \vp, \mu)$ is given by 
 \begin{equation}\label{drift-kinetic model}
-	\pa{f}{t} + \bu \cdot \nabla f + \ap \pa{f}{\vp} = 0.
+	\pa{f}{t} + \bu \cdot \nabla f + \ap \pa{f}{\vp} = 0,
 \end{equation}
-This function describes the positions of a collection of identical particles of charge $q\neq0$ and mass $m>0$, immersed in a static magnetic field $B(x)$.
-The phase-space gyro-centre Hamiltonian $H(\bx, \vp)$ reads
+which describes the positions of a collection of identical particles and whose exact solution is constant along the trajectories $(\bx(t), \vp(t), \mu(t))$ in the phase-space, i.e. 
 \begin{equation}
-	H(t, \bx, \vp, \mu) = \frac{1}{2} m \vp^2 + \mu B(\bx) + q \mean{\phi}_\alpha (t,\bx)
+	\frac{\dd}{\dd t} f(t,\bx(t), \vp(t), \mu(t)) = 0.
 \end{equation}
-where the bracket denotes averaging over the gyro-angle $\alpha$: $\mean{\;\cdot\;}_\alpha \equiv \int \cdot\d \alpha / (2\pi)$.\\
-Defining
+In order to determine the equations of motion for ${\dd \bx}/{\dd t} = \bu$ and ${\dd \vp}/{\dd t} = \ap$, we look at the remaining Euler-Lagrange equations and introduce the known electrostatic gyro-center Hamiltonian $H(\bx, \vp)$, which reads
+\begin{equation}
+	H(t, \bx, \vp, \mu) = \frac{1}{2} m \vp^2 + \mu B(\bx) + q \mean{\phi}_\alpha (t,\bx),
+\end{equation}
+where the bracket denotes an averaging over the gyro-angle $\alpha$, i.e.
+\begin{equation}
+	 \mean{\;\cdot\;}_\alpha \coloneqq \frac{1}{2\pi} \int \cdot \ \dd \alpha,
+\end{equation}
+of the electrostatic potential $\phi = \phi(t, \bx)$. 
+Simplifying notations by defining
+	\begin{equation}
+		\bB^\ast  \coloneqq \bB + \frac{m}{q}\vp \nabla \times \bb , \qquad
+		\Bap  \coloneqq \bb \cdot \bB^\ast = B + \frac{m \vp}{q B} \bb \cdot \left( \nabla \times \bB \right),
+	\end{equation}
+one can derive the characteristic trajectories from the remaining Euler-Lagrange equations of \eqref{Lagrangian}, which yield
 \begin{subequations}
 	\begin{align}
-		\bA^\ast & \equiv \bA + \frac{m}{e} \vp \bb \\
-		\bB^\ast & = \nabla \times \bA^\ast \\
-		\Bap & = \bb \cdot \bB = B + \frac{m \vp}{q B} \bb \cdot \left( \nabla \times \bB \right)
+		\bu  & = \frac{1}{\Bap} \left( \frac{1}{m} \pa{H}{\vp} \bB^\ast + \frac{1}{q} \bb \times \nabla H \right) \label{eom for bu}, \\
+		\ap & = \frac{1}{\Bap} \left( -\frac{1}{m} \bB^\ast \cdot  \nabla H  \right). \label{eom for ap}
 	\end{align}
 \end{subequations}
-one can easily derive the equations of motion from \eqref{Lagrangian}, which then read
-\begin{subequations}
-	\begin{align}
-		\bu = \dbx & = \frac{1}{\Bap} \left( \frac{1}{m} \pa{H}{\vp} \bB^\ast + \frac{1}{q} \bb \times \left(\nabla H\right) \right) \label{eom for bu} \\
-		\ap = \dot{\vp} & = \frac{1}{\Bap} \left( -\frac{1}{m} \bB^\ast \cdot \left( \nabla H \right) \right). \label{eom for ap}
-	\end{align}
-\end{subequations}
-As noted in \cite{Latu_2017}, the phase space is divergence-free
+As noted in \cite{Latu_2017}, the phase space is divergence-free, i.e.
 \begin{equation}
-	\nabla \cdot \bu + \pa{\ap}{\vp} = 0
+	\nabla \cdot \bu + \pa{\ap}{\vp} = 0,
 \end{equation}
-i.e. we can rewrite \eqref{drift-kinetic model} in conservative form
+thus we can rewrite \eqref{drift-kinetic model} in conservative form
 \begin{equation}\label{conservation1}
 	\pa{}{t}\left(\Bap f\right) + \nabla\cdot\left( \Bap \bu f \right) + \pa{}{\vp} \left( \Bap \ap f \right) = 0.
 \end{equation}
-Splitting between fast and slow steps yields:
+Splitting the equations into fast and slow subsystems, i.e. $\bu = \bu_f + \bu_s$ and $a_{\parallel} = a_{\parallel, f} + a_{\parallel, s}$, yields:
 \begin{subequations}
 	\begin{align}
 		(\text{fast}) = & \left\{ \begin{aligned}
-			\bu_f & = \frac{1}{\Bap} \frac{1}{m} \pa{H}{\vp} \bB \\
-			a_{\parallel, f} & = -\frac{1}{\Bap} \frac{1}{m} \bB \cdot \left( \nabla H \right)
+			\bu_f & = \frac{1}{\Bap} \frac{1}{m} \pa{H}{\vp} \bB, \\
+			a_{\parallel, f} & = -\frac{1}{\Bap} \frac{1}{m} \bB \cdot \left( \nabla H \right),
 		\end{aligned} \right. \label{split step fast}\\
 		(\text{slow}) = &  \left\{ \begin{aligned}
-			\bu_s & = \frac{1}{\Bap} \frac{1}{q} \left( \pa{H}{\vp} \vp \nabla \times \bb + \bb \times \left(\nabla H\right) \right) \\
-			a_{\parallel, s} & = - \frac{a}{\Bap} \frac{1}{q} \vp \left( \nabla \times \bb \right) \cdot \left( \nabla H \right)
+			\bu_s & = \frac{1}{\Bap} \frac{1}{q} \left( \pa{H}{\vp} \vp \nabla \times \bb + \bb \times \left(\nabla H\right) \right), \\
+			a_{\parallel, s} & = - \frac{a}{\Bap} \frac{1}{q} \vp \left( \nabla \times \bb \right) \cdot \left( \nabla H \right).
 		\end{aligned} \right. \label{split step slow}
 	\end{align}
 \end{subequations}
 Both fast and slow steps are divergence-free and derived from a Poisson bracket.
-
-The guiding-centre Poisson bracket reads:
-\begin{subequations}
-	\begin{align}
-		\gcbracket{F}{G} & = \frac{\bB^\ast}{m \Bap} \cdot \left( \left(\nabla F\right) \pa{G}{\vp} - \left(\nabla G\right) \pa{F}{\vp} \right) \label{gc Pb part 1} \\
-		& \qquad + \frac{\vp}{q \Bap} \left( \nabla \times \bb \right) \cdot \left( \left(\nabla F\right) \pa{G}{\vp} - \left(\nabla G\right) \pa{G}{\vp} \right) \label{gc Pb part 2} \\
-		& \qquad - \frac{1}{q \Bap} \bb \cdot \left[\left(\nabla F\right) \times \left(\nabla G\right)\right]. \label{gc Pb part 3}
-	\end{align}
-\end{subequations}
-For a constant background magnetic field $\bB$, the model is simplified and the fast and slow steps become 
+This guiding-center Poisson bracket is given by
+\begin{equation}
+	\begin{aligned}
+		\gcbracket{F}{G} & = \frac{\bB^\ast}{m \Bap} \cdot \left( \left(\nabla F\right) \pa{G}{\vp} - \left(\nabla G\right) \pa{F}{\vp} \right) \\
+		& \qquad + \frac{\vp}{q \Bap} \left( \nabla \times \bb \right) \cdot \left( \left(\nabla F\right) \pa{G}{\vp} - \left(\nabla G\right) \pa{G}{\vp} \right) \label{gc_lg} \\
+		& \qquad - \frac{1}{q \Bap} \bb \cdot \left[\left(\nabla F\right) \times \left(\nabla G\right)\right]. 
+	\end{aligned}
+\end{equation}
+For a constant background magnetic field $\bB$, the model simplifies and the subsystems become
 \begin{subequations}
 	\begin{align}
 		(\text{fast}) = & \left\{ \begin{aligned}
-			\bu_f & = {\vp} \bb \\
-			a_{\parallel, f} & = -\frac{q}{m} \bb \cdot \nabla \phi
+			\bu_f & = {\vp} \bb, \\
+			a_{\parallel, f} & = -\frac{q}{m} \bb \cdot \nabla \phi,
 		\end{aligned} \right. \label{split step fast const B}\\
 		(\text{slow}) = &  \left\{ \begin{aligned}
-			\bu_s & = \frac{\nabla \phi\times \bb}{\bB}  \\
-			a_{\parallel, s} & = 0
+			\bu_s & = \frac{\nabla \phi\times \bb}{\bB},  \\
+			a_{\parallel, s} & = 0.
 		\end{aligned} \right. \label{split step slow const B}
 	\end{align}
 \end{subequations}
-We refer to \cite{Latu_2017} for some background on the model. The aim is to look for $f = f(t, r, \theta, z, v_\parallel)$ satisfying
+Finally, we are able to rewrite the space variables to the screw-pinch model in cylindrical coordinates that is introduced in \cite{Latu_2017}. We look for the distribution function $f = f(t, r, \theta, z, v_\parallel)$ satisfying
+%TODO add sources? 
 \begin{equation}
 \partial_t f + \{\phi, f\} + v_\parallel \nabla_\parallel - \nabla_\parallel \phi \partial_{v_\parallel}f = 0, \label{eq:GK_model}
 \end{equation}
-where $\nabla_\parallel = \bb \cdot \nabla$ and the bracket is in polar coordinates
+where $\nabla_\parallel = \bb \cdot \nabla$ and the bracket is transformed to polar coordinates, which reads
 \begin{equation}
 \{\phi, f \} = \frac{1}{rB_0}\partial_r \phi\partial_\theta f -\frac{1}{rB_0}\partial_\theta \phi\partial_r f. \label{eq:bracket_in_polar}
 \end{equation}
-Since the plasma is quasi-neutral, what means that locally there may be charged regions but it is neutral overall, we can express self-consistent potential $\phi = \phi(t, r, \phi, z)$ as a solution to the following Poisson type, quasi-neutrality (QN) equation (for more details see \cite{emily})
+Since the plasma is quasi-neutral, what means that locally there may be charged regions but it is neutral overall, this equation is complemented by solving the Poisson type quasi-neutrality (QN) equation for the self-consistent potential $\phi = \phi(t, r, \phi, z)$, i.e. solving for a given temperature profile $T_e$
 \begin{equation}
-- \left[\partial_r^2 \phi + \left( \frac{1}{r} + \frac{\partial_r n_0}{n_0}\right)\partial_r \phi + \frac{1}{r^2} \partial_\theta^2 \phi \right] + \frac{1}{T_e} \phi = \int_{-\infty}^{\infty} (f - f_\text{eq}) \ \dd v_\parallel. \label{eq:qn}
+- \left[\partial_r^2 \phi + \left( \frac{1}{r} + \frac{\partial_r n_0}{n_0}\right)\partial_r \phi + \frac{1}{r^2} \partial_\theta^2 \phi \right] + \frac{1}{T_e} \phi = \int_{-\infty}^{\infty} (f - f_\text{eq}) \ \dd v_\parallel, \label{eq:qn}
 \end{equation}
-This equation will be treated using finite element method (FEM) on a B-spline basis. The independence of the equation from the $z$ direction and the periodicity of the solution in $\theta$ direction will be used to parallelize the code.
-
-\subsection{Boundary Conditions and Conservation Laws}
-
-Boundary conditions on $f$ are
-\begin{itemize}
-    \item Periodicity along $\theta$ and $z$.
-    \item Boundary conditions along $v_\parallel$ are cubic spline approximation of the distribution function %TODO
-    \item In $r$ direction, either Dirichlet boundary conditions (for the second-order scheme only) or extrapolation to an outside equilibrium function
-\end{itemize}
-
-For the boundary conditions on $\phi$ we take
-\begin{itemize}
-    \item Periodic along $\theta$.
-    \item In $r$-direction, $\phi$ is decomposed into Fourier modes. At $r_\text{min}$, we take homogeneous Neumann boundary conditions for the zeroth mode and homogeneous boundary conditions for the others. At $r_\text{max}$, we just take homogeneous Dirichlet boundary conditions.
-\end{itemize}
+where the given (radial symmetric) equilibrium function $f_\text{eq}$ is a Gaussian and the initial density function $n_0$ is the integral over $\vp$ of the initial distribution function $f(t=0, r, \theta, z, v_\parallel)$ that is the equilibrium function plus some excited modes.
 
 
+%TODO: Should this be here? Rather in numerical examples
+% This equation will be treated using finite element method (FEM) on a B-spline basis. The independence of the equation from the $z$ direction and the periodicity of the solution in $\theta$ direction will be used to parallelize the code.
+
+%\subsection{Boundary Conditions and Conservation Laws}
+
+To finalize this system of equations, we briefly want to discuss the boundary conditions of the screw-pinch model. The distribution function $f$ is periodic along $\theta$, $z$ and $\vp$. In the radial direction $r$, we assume the values are given an outside equilibrium function. For the potential $\phi$, we assume periodic boundary conditions along $\theta$ and $z$. In $r$-direction, we decompose $\phi$ into Fourier modes at $r_\text{min}$, taking homogeneous Neumann boundary conditions for the zeroth mode and homogeneous Dirichlet boundary conditions for the others. At $r_\text{max}$, we just take plain homogeneous Dirichlet boundary conditions.\\
 
 
-\subsubsection{Conserved Quantities}
-Firstly, we have a transport equation in conservative form \eqref{conservation1}. Secondly, \eqref{drift-kinetic model} conserves arbitrary functions of $f$  along non-linear characteristics,
+%Does this apply? Can you explain it to me? 
+%\subsubsection{Conserved Quantities}
+Lastly, we want to take a look at physical properties of these equations. Since we have a transport equation in conservative form, i.e. \eqref{conservation1},that conserves arbitrary functions of $f$  along non-linear characteristic trajectories, we can write the Casimir equation
 \begin{equation}
 \dt C(f) + \bracket{C(f)}{H} =0,
 \end{equation}
-and the Casimir invariant $\int C( f ) d^5R$ is also conserved. Therefore, in addition to the particle number or the $L^1$-norm $\int f d^5R$, the system has an infinite number of conserved quantities such as the $L^2$-norm $\int f^2 d^5R$, and the kinetic entropy $S=\int f \ln(f) d^5R$.\\
+where the Casimir invariant $\int C( f ) d^5R$ is conserved. Therefore, in addition to the particle number or the $L^1$-norm $\int f d^5R$, the system has an infinite number of conserved quantities such as the $L^2$-norm $\int f^2 d^5R$, and the kinetic entropy $S=\int f \ln(f) d^5R$.\\
 Thirdly, the gyro-kinetic equations conserve the total energy $H = E_k + E_f$:
 \begin{subequations}
 	\begin{align}
@@ -133,5 +129,3 @@ Thirdly, the gyro-kinetic equations conserve the total energy $H = E_k + E_f$:
 	\end{align}
 \end{subequations}
 where $E_k$ is the kinetic energy and $E_f$ is the field energy. For more details on this, we refer the reader to \cite{idomura2008conservative}.
-
-In the next chapter we will explain the numerical scheme used to obtain the approximate solution of the GK model. Our goal is combine the Semi-Lagrangian (SL) and Arakawa scheme (AK). SL scheme will be used to solve fast subsystem and AK for slow. The main reason for combining these two schemes is to get a solution that preserves some of the basic measures in the system we have.
